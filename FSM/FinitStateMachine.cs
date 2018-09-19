@@ -7,7 +7,9 @@ namespace FSM
     class FiniteStateMachine
     {
         private const int _lineForTransition = 4;
+        private const string _stopSymbol = "6";
 
+        #region Fields
         //множество состояний
         private List<string> _states;
         //множество начальных состояний
@@ -27,8 +29,8 @@ namespace FSM
         //переходы
         private Dictionary<string, string[]> _transitions;
         //список для записей промежуточных состояний автомата
-        private List<string> _interimStates;
-
+        private List<string> _interimStates; 
+        #endregion
 
         #region Property
 
@@ -144,10 +146,20 @@ namespace FSM
                 finallyStates += item;
             }
 
+            foreach (var item in Transitions)
+            {
+                Console.Write($"{item.Key}: ");
+
+                foreach (var item2 in item.Value)
+                {
+                    Console.Write($"{item2} ");
+                }
+
+                Console.WriteLine();
+            }
+
             return $"States: {states}{Environment.NewLine}Alphabet: {Alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}";
         }
-
-
 
         /// <summary>
         /// Метод для подсчёта максимальной подстроки
@@ -202,6 +214,51 @@ namespace FSM
         }
 
         /// <summary>
+        /// Метод для подсчёта вещественных чисел в строке
+        /// </summary>
+        /// <param name="input">Входная строка</param>
+        /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
+        /// <returns></returns>
+        public Tuple<bool, int> CountNumbers(string input, int k)
+        {
+            bool result = false;
+            int m = 0;
+            //string tempString = "";
+
+            //Проход по входной строке
+            for (int i = k; i < input.Length; i++)
+            {
+                //Проверка символов на вхождение в алфавит
+                if (Alphabet.Contains(input[i].ToString()))
+                {
+                    StateTransitionFunction(CurrentState, input[i].ToString());
+
+                    if (CurrentState.Contains(_stopSymbol))
+                    {
+                        m++;
+                        CurrentState = new List<string>() { "1" };
+                    }
+
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (CurrentState.ContainsAll(FinalyStates))
+                {
+                    result = true;
+                    m++;
+                }
+
+            }
+
+            
+
+            return new Tuple<bool, int>(result, m);
+        }
+
+        /// <summary>
         /// Функция перехода
         /// </summary>
         /// <param name="currentStates">Текущие состояния автомата</param>
@@ -216,10 +273,12 @@ namespace FSM
             {
                 //Этот цикл нужен для извлечения можества состояний, которые поделены знаком '|'. Например, для состояния 2, который может перейти по горизонтали в 1 или 3.
                 //После извлечения состояния добавляются в список промежуточных состояний.
+
                 foreach (var item2 in Transitions[symbol][Int32.Parse(item) - 1].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     InterimStates.Add(item2);
                 }
+
             }
 
             //Присваиваем списку текущих состояний список промежуточных состояний.
