@@ -13,25 +13,9 @@ namespace FSM
 
             FiniteStateMachine fsm = new FiniteStateMachine("TextFile2.txt");
 
-            //Console.WriteLine(fsm.Transitions["+"][0]);
+            //qweqwe12.qweq+-123eqwe4124adl435kasf+12.54e+43 --- 1e7+8.9 ----- .535wsdqr5456qwe5.5asd-5.5 ---adcv12asdasd1735qwesdfa47+8.99cd
 
-            //foreach (var item in fsm.CurrentState)
-            //{
-            //    //Этот цикл нужен для извлечения можества состояний, которые поделены знаком '|'. Например, для состояния 2, который может перейти по горизонтали в 1 или 3.
-            //    //После извлечения состояния добавляются в список промежуточных состояний.
-
-            //    foreach (var item2 in fsm.Transitions["+"][Int32.Parse(item) - 1].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
-            //    {
-            //        Console.WriteLine(item2);
-            //    }
-
-            //}
-
-            //Console.WriteLine(fsm.ToString());
-
-            //var result = fsm.CountNumbers("qweqwe12.qweq+-123eqwe4124adl435kasf+12.54e+43", 0); //6
-
-            var result = fsm.CountNumbers("17.35", 0);
+            var result = fsm.CountNumbers("qweqwe12.qweq+-123eeqwe4124adl435kasf+12.54e+43", 0);
 
             Console.WriteLine(result);
 

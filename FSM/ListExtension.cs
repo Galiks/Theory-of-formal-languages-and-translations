@@ -15,7 +15,7 @@ namespace FSM
         /// <param name="ilist">Начальная коллекция</param>
         /// <param name="list">Коллекция для сравнения</param>
         /// <returns></returns>
-        public static bool ContainsAll(this IList ilist, List<int> list)
+        public static bool ContainsList(this IList ilist, List<int> list)
         {
             foreach (var item in list)
             {
@@ -32,13 +32,13 @@ namespace FSM
         {
             foreach (var item in list)
             {
-                if (!ilist.Contains(item))
+                if (ilist.Contains(item))
                 {
-                    return false;
+                    return true;
                 }
             }
 
-            return true;
+            return false;
         }
     }
 }
