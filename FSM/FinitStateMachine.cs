@@ -2,13 +2,14 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace FSM
 {
     class FiniteStateMachine
     {
         private const int _lineForTransition = 4;
-        private const string _stopSymbol = "6";
+        private const string _stopSymbol = "9";
 
         #region Fields
         //множество состояний
@@ -30,7 +31,7 @@ namespace FSM
         //переходы
         private Dictionary<string, string[]> _transitions;
         //список для записей промежуточных состояний автомата
-        private List<string> _interimStates; 
+        private HashSet<string> _interimStates; 
         #endregion
 
         #region Property
@@ -44,7 +45,8 @@ namespace FSM
         public List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
         public Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
         public List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
-        public List<string> InterimStates { get => _interimStates; set => _interimStates = value; }
+        public HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
+
 
         #endregion
 
@@ -62,7 +64,7 @@ namespace FSM
             ListForTransition = new List<string[]>();
             Transitions = new Dictionary<string, string[]>();
             CurrentState = new List<string>();
-            InterimStates = new List<string>();
+            InterimStates = new HashSet<string>();
 
             //Информация из файла заносится в DataFile, который состоит из массивов
             using (StreamReader reader = new StreamReader(filePath))
@@ -113,7 +115,7 @@ namespace FSM
             }
 
             //Проверка на то, что указанные начальные или конечные состояния входят в множество состояний
-            if (!States.ContainsAll(InitialStates) || !States.ContainsAll(FinalyStates))
+            if (!States.ContainsList(InitialStates) || !States.ContainsList(FinalyStates))
             {
                 throw new Exception("Указанные начальные или конечные состояния не входят в множество состояний.");
             }
@@ -178,7 +180,7 @@ namespace FSM
             string output = "";
             string tempString = "";
 
-            if (InitialStates.ContainsAll(FinalyStates))
+            if (InitialStates.ContainsList(FinalyStates))
             {
                 result = true;
                 return new Tuple<bool, int>(result, m);
@@ -198,7 +200,7 @@ namespace FSM
 
                     //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
-                    if (CurrentState.ContainsAll(FinalyStates))
+                    if (CurrentState.ContainsList(FinalyStates))
                     {
                         result = true;
                         output = tempString;
@@ -228,80 +230,112 @@ namespace FSM
         {
             bool result = false;
             int m = 0;
-            string interimStringToSafeTheSequence = "";
-            StringBuilder newInputWithoutAnotherSymbol = new StringBuilder(input);
+            string text = "";
 
-            NewInput(input, newInputWithoutAnotherSymbol);
-
-            //Заносим в массив возможные вещественные числа
-            string[] numbers = newInputWithoutAnotherSymbol.ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //Проход по массиву. Дальше начинается Ад
-            foreach (var item in numbers)
+            for (int i = k; i < input.Length; i++)
             {
-                string newItemWithoutSymbolInTheEnd = item;
 
-                //Удаляем в конце символы, так как настоящее вещественное число заканчивается цифрой *поднятый вверх указательный палец*
-                while (!Char.IsDigit(newItemWithoutSymbolInTheEnd, newItemWithoutSymbolInTheEnd.Length - 1) && newItemWithoutSymbolInTheEnd.Length > 1)
+                if (Alphabet.Contains(input[i]))
                 {
-                    if (newItemWithoutSymbolInTheEnd.Length != 0)
+                    StateTransitionFunction(CurrentState, input[i].ToString());
+
+                    text += input[i];
+
+                    if (CurrentState.ContainsList(FinalyStates))
                     {
-                        newItemWithoutSymbolInTheEnd = newItemWithoutSymbolInTheEnd.Remove(newItemWithoutSymbolInTheEnd.Length - 1);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                
-                //Настал момент поиска вещественных чисел. Обычным циклом проходимся по строке
-                for (int i = 0; i < newItemWithoutSymbolInTheEnd.Length; i++)
-                {
-                    StateTransitionFunction(CurrentState, newItemWithoutSymbolInTheEnd[i].ToString());
-
-                    interimStringToSafeTheSequence += newItemWithoutSymbolInTheEnd[i];
-
-                    //Если порядок выпал таким, что дальше числа может не быть, то можно подумать, что до этого там могло быть вещественное число. 
-                    //Для этого проходимся по той последовательности, которая была до "остановки"
-                    if (CurrentState.Contains(_stopSymbol))
-                    {
-                        //Так как проверка начинается с начала, то присваиваем текущим состояниям начальные
-                        CurrentState = new List<string>(InitialStates);
-
-                        //Такой же проход, который был в самом начале. Можно было бы сделать отдельный метод и вызывать его - это на будущее
-                        for (int j = 0; j < interimStringToSafeTheSequence.Length-1; j++)
-                        {
-                            StateTransitionFunction(CurrentState, interimStringToSafeTheSequence[j].ToString());
-                        }
-
-                        //В конце последовательности нашли число
-                        if (CurrentState.ContainsAll(FinalyStates))
-                        {
-                            result = true;
-                            m++;
-                            interimStringToSafeTheSequence = "";
-                        }
-
-                        //Очищаем строчку, так как она нам ещё понадобится
-                        interimStringToSafeTheSequence = "";
-
-                        //Снова присваиваем текущим состояниям начальные, так как мы, возможно, нашли одно число, а теперь нужно найти другое
+                        Console.WriteLine(text);
                         CurrentState = new List<string>(InitialStates);
                     }
 
                 }
-
-                //В конце проверяем текущие состояния на наличие конечных
-                if (CurrentState.ContainsAll(FinalyStates))
+                else
                 {
-                    result = true;
-                    m++;
-                    interimStringToSafeTheSequence = "";
+                    text = "";
+                    CurrentState = new List<string>(InitialStates);
+                    continue;
                 }
-
-                //Возвращение к начальным состояниям
-                CurrentState = new List<string>(InitialStates);
             }
+
+
+
+            #region NotOlderVersion
+            //string interimStringToSafeTheSequence = "";
+            //StringBuilder newInputWithoutAnotherSymbol = new StringBuilder(input);
+
+            //NewInput(input, newInputWithoutAnotherSymbol);
+
+            ////Заносим в массив возможные вещественные числа
+            //string[] numbers = newInputWithoutAnotherSymbol.ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            ////Проход по массиву. Дальше начинается Ад
+            //foreach (var item in numbers)
+            //{
+            //    string newItemWithoutSymbolInTheEnd = item;
+
+            //    //Удаляем в конце символы, так как настоящее вещественное число заканчивается цифрой *поднятый вверх указательный палец*
+            //    while (!Char.IsDigit(newItemWithoutSymbolInTheEnd, newItemWithoutSymbolInTheEnd.Length - 1) && newItemWithoutSymbolInTheEnd.Length > 1)
+            //    {
+            //        if (newItemWithoutSymbolInTheEnd.Length != 0)
+            //        {
+            //            newItemWithoutSymbolInTheEnd = newItemWithoutSymbolInTheEnd.Remove(newItemWithoutSymbolInTheEnd.Length - 1);
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+
+            //    //Настал момент поиска вещественных чисел. Обычным циклом проходимся по строке
+            //    for (int i = 0; i < newItemWithoutSymbolInTheEnd.Length; i++)
+            //    {
+            //        StateTransitionFunction(CurrentState, newItemWithoutSymbolInTheEnd[i].ToString());
+
+            //        interimStringToSafeTheSequence += newItemWithoutSymbolInTheEnd[i];
+
+            //        //Если порядок выпал таким, что дальше числа может не быть, то можно подумать, что до этого там могло быть вещественное число. 
+            //        //Для этого проходимся по той последовательности, которая была до "остановки"
+            //        if (CurrentState.Contains(_stopSymbol))
+            //        {
+            //            //Так как проверка начинается с начала, то присваиваем текущим состояниям начальные
+            //            CurrentState = new List<string>(InitialStates);
+
+            //            //Такой же проход, который был в самом начале. Можно было бы сделать отдельный метод и вызывать его - это на будущее
+            //            for (int j = 0; j < interimStringToSafeTheSequence.Length-1; j++)
+            //            {
+            //                StateTransitionFunction(CurrentState, interimStringToSafeTheSequence[j].ToString());
+            //            }
+
+            //            //В конце последовательности нашли число
+            //            if (CurrentState.ContainsAll(FinalyStates))
+            //            {
+            //                result = true;
+            //                m++;
+            //                Console.WriteLine(interimStringToSafeTheSequence);
+            //                interimStringToSafeTheSequence = "";
+            //            }
+
+            //            //Очищаем строчку, так как она нам ещё понадобится
+            //            interimStringToSafeTheSequence = "";
+
+            //            //Снова присваиваем текущим состояниям начальные, так как мы, возможно, нашли одно число, а теперь нужно найти другое
+            //            CurrentState = new List<string>(InitialStates);
+            //        }
+
+            //    }
+
+            //    //В конце проверяем текущие состояния на наличие конечных
+            //    if (CurrentState.ContainsAll(FinalyStates))
+            //    {
+            //        result = true;
+            //        m++;
+            //        Console.WriteLine(interimStringToSafeTheSequence);
+            //        interimStringToSafeTheSequence = "";
+            //    }
+
+            //    //Возвращение к начальным состояниям
+            //    CurrentState = new List<string>(InitialStates);
+            //} 
+            #endregion
 
             //Старая и ненужная вещь, но берегу, как память о былом
             #region OldVersion
@@ -354,6 +388,10 @@ namespace FSM
             }
         }
 
+        /// <summary>
+        /// Метод для вывода массива
+        /// </summary>
+        /// <param name="numbers">Массив</param>
         private static void WriteInfo(string[] numbers)
         {
             foreach (var item in numbers)
@@ -372,27 +410,22 @@ namespace FSM
         private void StateTransitionFunction(List<string> currentStates, string symbol)
         {
             //Список промежуточных значений. Используется для хранения значений, который в дальнейшем будут записываться в CurrentState
-            InterimStates = new List<string>();
+            InterimStates = new HashSet<string>();
 
             //С помощью цикла проходим по текущим состояниям автомата
             foreach (var item in currentStates)
             {
+                //Индекс текущего состояния
+                var valueIndex = States.IndexOf(item);
                 //Этот цикл нужен для извлечения можества состояний, которые поделены знаком '|'. Например, для состояния 2, который может перейти по горизонтали в 1 или 3.
                 //После извлечения состояния добавляются в список промежуточных состояний.
-
-                foreach (var item2 in Transitions[symbol][Int32.Parse(item) - 1].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var item2 in Transitions[symbol][valueIndex].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     InterimStates.Add(item2);
                 }
-
             }
-
             //Присваиваем списку текущих состояний список промежуточных состояний.
-            CurrentState = InterimStates;
-
+            CurrentState = InterimStates.ToList();
         }
-
-
-
     }
 }
