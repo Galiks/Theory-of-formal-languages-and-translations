@@ -28,7 +28,13 @@ namespace FSM
             return false;
         }
 
-        public static bool ContainsAll(this IList ilist, List<string> list)
+        /// <summary>
+        /// Проверяет находятся ли в колекции элементы из другой колекции
+        /// </summary>
+        /// <param name="ilist">Начальная коллекция</param>
+        /// <param name="list">Коллекция для сравнения</param>
+        /// <returns></returns>
+        public static bool ContainsList(this IList ilist, List<string> list)
         {
             foreach (var item in list)
             {
@@ -39,6 +45,18 @@ namespace FSM
             }
 
             return false;
+        }
+
+        public static string RemoveLastChar(this string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+            else
+            {
+                return text.Remove(text.Length - 1);
+            }
         }
     }
 }

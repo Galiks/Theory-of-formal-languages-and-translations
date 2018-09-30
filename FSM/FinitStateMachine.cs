@@ -230,33 +230,69 @@ namespace FSM
         {
             bool result = false;
             int m = 0;
-            string text = "";
 
-            for (int i = k; i < input.Length; i++)
+            string newInput = NewInput(input);
+
+            var array = newInput.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var item in array)
             {
+                int numberInOnepart = 0;
 
-                if (Alphabet.Contains(input[i]))
+                for (int i = 0; i < item.Length; i++)
                 {
-                    StateTransitionFunction(CurrentState, input[i].ToString());
+                    StateTransitionFunction(CurrentState, item[i].ToString());
 
-                    text += input[i];
-
+                    if (CurrentState.Contains(_stopSymbol))
+                    {
+                        CurrentState = InitialStates;
+                        continue;
+                    }
                     if (CurrentState.ContainsList(FinalyStates))
                     {
-                        Console.WriteLine(text);
-                        CurrentState = new List<string>(InitialStates);
+                        numberInOnepart++;
+                        continue;
                     }
-
                 }
-                else
+
+                if (numberInOnepart > 0)
                 {
-                    text = "";
-                    CurrentState = new List<string>(InitialStates);
-                    continue;
+                    result = true;
+                    m++;
                 }
             }
 
+            //for (int i = 0; i < input.Length; i++)
+            //{
+            //    if (Alphabet.Contains(input[i]))
+            //    {
+            //        StateTransitionFunction(CurrentState, input[i].ToString());
 
+            //        tempOutput += input[i];
+
+            //        if (CurrentState.Contains(_stopSymbol))
+            //        {
+            //            CurrentState = InitialStates;
+            //            continue;
+            //        }
+            //        if (CurrentState.ContainsList(FinalyStates))
+            //        {
+            //            Console.WriteLine(tempOutput);
+            //            m++;
+            //            continue;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        tempOutput = "";
+            //        Console.WriteLine(output);
+            //    }
+               
+            //}
+
+            //Console.WriteLine(output);
+
+            
 
             #region NotOlderVersion
             //string interimStringToSafeTheSequence = "";
@@ -377,8 +413,10 @@ namespace FSM
         /// </summary>
         /// <param name="input">Начальная входная строка</param>
         /// <param name="tempInput">Изменённая входная строка</param>
-        private void NewInput(string input, StringBuilder tempInput)
+        private string NewInput(string input)
         {
+            StringBuilder tempInput = new StringBuilder(input);
+
             for (int i = 0; i < input.Length; i++)
             {
                 if (!Alphabet.Contains(input[i].ToString()))
@@ -386,6 +424,8 @@ namespace FSM
                     tempInput.Replace(input[i], ' ');
                 }
             }
+
+            return tempInput.ToString();
         }
 
         /// <summary>
