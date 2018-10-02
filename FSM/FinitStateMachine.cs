@@ -219,6 +219,50 @@ namespace FSM
             return new Tuple<bool, int>(result, m);
         }
 
+
+        /// <summary>
+        /// Метод для подсчёта максимальной подстроки
+        /// </summary>
+        /// <param name="input">Входная строка</param>
+        /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
+        /// <returns>Возвращает Tuple, который содержит result - True или False в зависимости от того, найдена подстрока во входной строке или нет, а также m - длину этой строки</returns>
+        public string MaxStringForNumber(string input, int k)
+        {
+            //bool result = false;
+            int m = 0;
+            string output = "";
+            string tempString = "";
+
+            //Проход по входной строке
+            for (int i = k; i < input.Length; i++)
+            {
+                //Проверка символов на вхождение в алфавит
+                if (Alphabet.Contains(input[i].ToString()))
+                {
+                    //Вызов функции перехода. Передаём текущие состояния автомата и символ
+                    StateTransitionFunction(CurrentState, input[i].ToString());
+
+                    //в промежуточную строку добавляем символ из входной строки
+                    tempString += input[i];
+
+                    //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
+                    //И продолжаем цикл, пока не пройдём всю входную строку. 
+                    if (CurrentState.ContainsList(FinalyStates))
+                    {
+                        output = tempString;
+                        m = i - k + 1;
+                    }
+                    if (String.IsNullOrWhiteSpace(CurrentState.First()))
+                    {
+                        tempString = "";
+                        CurrentState = InitialStates;
+                    }
+                }
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Метод для подсчёта вещественных чисел в строке
         /// </summary>
@@ -226,186 +270,31 @@ namespace FSM
         /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         /// <returns>Возвращает Tuple, который содержит result - True или False в зависимости от того, найдено хотя бы одно вещественное число или нет,
         /// а также m - количество вещественных чисел</returns>
-        public Tuple<bool, int> CountNumbers(string input, int k)
+        public void CountNumbers(string input, int k)
         {
-            bool result = false;
-            int m = 0;
+            List<string> numbers = new List<string>();
+            string number = "";
 
-            string newInput = NewInput(input);
-
-            var array = newInput.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var item in array)
+            for (int i = k; i < input.Length; i++)
             {
-                int numberInOnepart = 0;
-
-                for (int i = 0; i < item.Length; i++)
+                if (Alphabet.Contains(input[i].ToString()))
                 {
-                    StateTransitionFunction(CurrentState, item[i].ToString());
-
-                    if (CurrentState.Contains(_stopSymbol))
-                    {
-                        CurrentState = InitialStates;
-                        continue;
-                    }
-                    if (CurrentState.ContainsList(FinalyStates))
-                    {
-                        numberInOnepart++;
-                        continue;
-                    }
+                    number += input[i];
                 }
-
-                if (numberInOnepart > 0)
+                else
                 {
-                    result = true;
-                    m++;
+                    if (!String.IsNullOrEmpty(number))
+                    {
+                        numbers.Add(MaxStringForNumber(number, 0)); 
+                    }
+                    CurrentState = InitialStates;
+                    number = "";
                 }
             }
-
-            //for (int i = 0; i < input.Length; i++)
-            //{
-            //    if (Alphabet.Contains(input[i]))
-            //    {
-            //        StateTransitionFunction(CurrentState, input[i].ToString());
-
-            //        tempOutput += input[i];
-
-            //        if (CurrentState.Contains(_stopSymbol))
-            //        {
-            //            CurrentState = InitialStates;
-            //            continue;
-            //        }
-            //        if (CurrentState.ContainsList(FinalyStates))
-            //        {
-            //            Console.WriteLine(tempOutput);
-            //            m++;
-            //            continue;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        tempOutput = "";
-            //        Console.WriteLine(output);
-            //    }
-               
-            //}
-
-            //Console.WriteLine(output);
-
             
+            numbers.Add(MaxStringForNumber(number, 0));
 
-            #region NotOlderVersion
-            //string interimStringToSafeTheSequence = "";
-            //StringBuilder newInputWithoutAnotherSymbol = new StringBuilder(input);
-
-            //NewInput(input, newInputWithoutAnotherSymbol);
-
-            ////Заносим в массив возможные вещественные числа
-            //string[] numbers = newInputWithoutAnotherSymbol.ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            ////Проход по массиву. Дальше начинается Ад
-            //foreach (var item in numbers)
-            //{
-            //    string newItemWithoutSymbolInTheEnd = item;
-
-            //    //Удаляем в конце символы, так как настоящее вещественное число заканчивается цифрой *поднятый вверх указательный палец*
-            //    while (!Char.IsDigit(newItemWithoutSymbolInTheEnd, newItemWithoutSymbolInTheEnd.Length - 1) && newItemWithoutSymbolInTheEnd.Length > 1)
-            //    {
-            //        if (newItemWithoutSymbolInTheEnd.Length != 0)
-            //        {
-            //            newItemWithoutSymbolInTheEnd = newItemWithoutSymbolInTheEnd.Remove(newItemWithoutSymbolInTheEnd.Length - 1);
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-
-            //    //Настал момент поиска вещественных чисел. Обычным циклом проходимся по строке
-            //    for (int i = 0; i < newItemWithoutSymbolInTheEnd.Length; i++)
-            //    {
-            //        StateTransitionFunction(CurrentState, newItemWithoutSymbolInTheEnd[i].ToString());
-
-            //        interimStringToSafeTheSequence += newItemWithoutSymbolInTheEnd[i];
-
-            //        //Если порядок выпал таким, что дальше числа может не быть, то можно подумать, что до этого там могло быть вещественное число. 
-            //        //Для этого проходимся по той последовательности, которая была до "остановки"
-            //        if (CurrentState.Contains(_stopSymbol))
-            //        {
-            //            //Так как проверка начинается с начала, то присваиваем текущим состояниям начальные
-            //            CurrentState = new List<string>(InitialStates);
-
-            //            //Такой же проход, который был в самом начале. Можно было бы сделать отдельный метод и вызывать его - это на будущее
-            //            for (int j = 0; j < interimStringToSafeTheSequence.Length-1; j++)
-            //            {
-            //                StateTransitionFunction(CurrentState, interimStringToSafeTheSequence[j].ToString());
-            //            }
-
-            //            //В конце последовательности нашли число
-            //            if (CurrentState.ContainsAll(FinalyStates))
-            //            {
-            //                result = true;
-            //                m++;
-            //                Console.WriteLine(interimStringToSafeTheSequence);
-            //                interimStringToSafeTheSequence = "";
-            //            }
-
-            //            //Очищаем строчку, так как она нам ещё понадобится
-            //            interimStringToSafeTheSequence = "";
-
-            //            //Снова присваиваем текущим состояниям начальные, так как мы, возможно, нашли одно число, а теперь нужно найти другое
-            //            CurrentState = new List<string>(InitialStates);
-            //        }
-
-            //    }
-
-            //    //В конце проверяем текущие состояния на наличие конечных
-            //    if (CurrentState.ContainsAll(FinalyStates))
-            //    {
-            //        result = true;
-            //        m++;
-            //        Console.WriteLine(interimStringToSafeTheSequence);
-            //        interimStringToSafeTheSequence = "";
-            //    }
-
-            //    //Возвращение к начальным состояниям
-            //    CurrentState = new List<string>(InitialStates);
-            //} 
-            #endregion
-
-            //Старая и ненужная вещь, но берегу, как память о былом
-            #region OldVersion
-            //Проход по входной строке
-            //for (int i = k; i < input.Length; i++)
-            //{
-            //    //Проверка символов на вхождение в алфавит
-            //    if (Alphabet.Contains(input[i].ToString()))
-            //    {
-            //        StateTransitionFunction(CurrentState, input[i].ToString());
-
-            //        if (CurrentState.Contains(_stopSymbol))
-            //        {
-            //            m++;
-            //            CurrentState = new List<string>() { "1" };
-            //        }
-
-            //    }
-            //    else
-            //    {
-            //        continue;
-            //    }
-
-            //    if (CurrentState.ContainsAll(FinalyStates))
-            //    {
-            //        result = true;
-            //        m++;
-            //    }
-
-            //} 
-            #endregion
-
-
-            return new Tuple<bool, int>(result, m);
+            numbers.Information();
         }
 
         /// <summary>
@@ -426,20 +315,6 @@ namespace FSM
             }
 
             return tempInput.ToString();
-        }
-
-        /// <summary>
-        /// Метод для вывода массива
-        /// </summary>
-        /// <param name="numbers">Массив</param>
-        private static void WriteInfo(string[] numbers)
-        {
-            foreach (var item in numbers)
-            {
-                Console.Write($"{item} ");
-            }
-
-            Console.WriteLine();
         }
 
         /// <summary>

@@ -47,6 +47,14 @@ namespace FSM
             return false;
         }
 
+        public static void Information(this IList ilist)
+        {
+            foreach (var item in ilist)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
         public static string RemoveLastChar(this string text)
         {
             if (string.IsNullOrEmpty(text))
@@ -58,5 +66,7 @@ namespace FSM
                 return text.Remove(text.Length - 1);
             }
         }
+
+        
     }
 }
