@@ -219,7 +219,6 @@ namespace FSM
             return new Tuple<bool, int>(result, m);
         }
 
-
         /// <summary>
         /// Метод для подсчёта максимальной подстроки
         /// </summary>
@@ -247,14 +246,17 @@ namespace FSM
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
                     if (CurrentState.ContainsList(FinalyStates))
                     {
-                        
-                        output = tempString;
-                        
-                        
-                        
+                        if (output.Length < tempString.Length)
+                        {
+                            output = tempString;    
+                        }
                     }
                     if (String.IsNullOrWhiteSpace(CurrentState.First()))
                     {
+                        if (tempString.Length > 1)
+                        {
+                            i--;
+                        }
                         tempString = "";
                         
                         CurrentState = InitialStates;
@@ -297,6 +299,8 @@ namespace FSM
             numbers.Add(MaxStringForNumber(number, 0));
 
             numbers.Information();
+
+            CurrentState = InitialStates;
         }
 
         /// <summary>
