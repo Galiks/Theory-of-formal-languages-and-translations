@@ -228,8 +228,6 @@ namespace FSM
         /// <returns>Возвращает Tuple, который содержит result - True или False в зависимости от того, найдена подстрока во входной строке или нет, а также m - длину этой строки</returns>
         public string MaxStringForNumber(string input, int k)
         {
-            //bool result = false;
-            int m = 0;
             string output = "";
             string tempString = "";
 
@@ -245,16 +243,20 @@ namespace FSM
                     //в промежуточную строку добавляем символ из входной строки
                     tempString += input[i];
 
-                    //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
+                    //Если текущие состояния "достигли" конечных, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
                     if (CurrentState.ContainsList(FinalyStates))
                     {
+                        
                         output = tempString;
-                        m = i - k + 1;
+                        
+                        
+                        
                     }
                     if (String.IsNullOrWhiteSpace(CurrentState.First()))
                     {
                         tempString = "";
+                        
                         CurrentState = InitialStates;
                     }
                 }
@@ -283,7 +285,7 @@ namespace FSM
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(number))
+                    if (!String.IsNullOrEmpty(number) || !String.IsNullOrWhiteSpace(number))
                     {
                         numbers.Add(MaxStringForNumber(number, 0)); 
                     }
@@ -295,26 +297,6 @@ namespace FSM
             numbers.Add(MaxStringForNumber(number, 0));
 
             numbers.Information();
-        }
-
-        /// <summary>
-        /// Метод для преобразования промежуточных символов в пробелы
-        /// </summary>
-        /// <param name="input">Начальная входная строка</param>
-        /// <param name="tempInput">Изменённая входная строка</param>
-        private string NewInput(string input)
-        {
-            StringBuilder tempInput = new StringBuilder(input);
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (!Alphabet.Contains(input[i].ToString()))
-                {
-                    tempInput.Replace(input[i], ' ');
-                }
-            }
-
-            return tempInput.ToString();
         }
 
         /// <summary>
