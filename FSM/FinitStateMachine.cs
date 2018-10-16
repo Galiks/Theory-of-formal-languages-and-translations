@@ -55,7 +55,6 @@ namespace FSM
         /// <param name="filePath">Путь к файлу с автоматом</param>
         public FiniteStateMachine(string filePath)
         {
-
             States = new List<string>();
             DataFile = new List<string[]>();
             InitialStates = new List<string>();
@@ -121,6 +120,11 @@ namespace FSM
 
             //Присваивание списку, который содержит текущие состояния, начальных состояний
             CurrentState = InitialStates;
+
+        }
+
+        public FiniteStateMachine(string file, bool flag)
+        {
 
         }
 
