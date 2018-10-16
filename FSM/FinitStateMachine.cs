@@ -63,7 +63,12 @@ namespace FSM
             Transitions = new Dictionary<string, string[]>();
             CurrentState = new List<string>();
             InterimStates = new HashSet<string>();
+            ReadFile(filePath);
 
+        }
+
+        private void ReadFile(string filePath)
+        {
             //Информация из файла заносится в DataFile, который состоит из массивов
             using (StreamReader reader = new StreamReader(filePath))
             {
@@ -120,12 +125,6 @@ namespace FSM
 
             //Присваивание списку, который содержит текущие состояния, начальных состояний
             CurrentState = InitialStates;
-
-        }
-
-        public FiniteStateMachine(string file, bool flag)
-        {
-
         }
 
         /// <summary>
