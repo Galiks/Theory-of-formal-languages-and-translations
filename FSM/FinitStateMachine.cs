@@ -9,7 +9,6 @@ namespace FSM
     class FiniteStateMachine
     {
         private const int _lineForTransition = 4;
-        private const string _stopSymbol = "9";
 
         #region Fields
         //множество состояний
@@ -253,12 +252,18 @@ namespace FSM
                     }
                     if (String.IsNullOrWhiteSpace(CurrentState.First()))
                     {
+                        if (output.Length > 0)
+                        {
+                            Console.WriteLine(output); 
+                        }
+
                         if (tempString.Length > 1)
                         {
                             i--;
                         }
                         tempString = "";
-                        
+                        output = "";
+
                         CurrentState = InitialStates;
                     }
                 }

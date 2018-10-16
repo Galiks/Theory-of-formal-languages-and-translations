@@ -11,13 +11,13 @@ namespace FSM
         static void Main(string[] args)
         {
 
-            string path = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\TextFile2.txt";
+            string path = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\TextFile2.txt";
 
             FiniteStateMachine fsm = new FiniteStateMachine(path);
 
             //qeqe..12..qeq+123eqe4124a435ek+12.54e+43 --- 1e7+8.9 ----- .535wsdqr5456qwe5.5asd-5.5 ---adcv12asdasd1735qwesdfa47+8.99cd --qwe12w53.5e+3
 
-            fsm.CountNumbers(".535wsdqr5456qwe5.5asd------+++++++5++-.5", 0);
+            fsm.CountNumbers("+5++-.5e5e3e5a34.4", 0);
             Console.WriteLine("Конец");
             //Console.WriteLine();
 
