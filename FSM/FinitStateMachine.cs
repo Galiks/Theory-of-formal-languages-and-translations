@@ -8,8 +8,8 @@ namespace FSM
 {
     class FiniteStateMachine
     {
-        private const int _lineForTransition = 4;
-        private const string _stopSymbol = "9";
+        private const int _lineForTransition_OneAndTwoTasks = 4;
+        private const int _lineForTransition_ThreeTask = 5;
 
         #region Fields
         //множество состояний
@@ -19,7 +19,7 @@ namespace FSM
         //множество конечных состояний
         private List<string> _finalyStates;
         //алфавит
-        private string _alphabet;
+        private List<string> _alphabet;
         //текущее состояние
         private List<string> _currentState;
         //бывшие состояния
@@ -31,27 +31,33 @@ namespace FSM
         //переходы
         private Dictionary<string, string[]> _transitions;
         //список для записей промежуточных состояний автомата
-        private HashSet<string> _interimStates; 
+        private HashSet<string> _interimStates;
+        //приоритет автоматов
+        private string _priority;
+        //стоп-символ
+        private string _stopSymbol;
         #endregion
 
         #region Property
 
-        public List<string> States { get => _states; set => _states = value; }
-        public List<string> InitialStates { get => _initialStates; set => _initialStates = value; }
-        public List<string> FinalyStates { get => _finalyStates; set => _finalyStates = value; }
-        public string Alphabet { get => _alphabet; set => _alphabet = value; }
-        public List<string> CurrentState { get => _currentState; set => _currentState = value; }
+        private List<string> States { get => _states; set => _states = value; }
+        private List<string> InitialStates { get => _initialStates; set => _initialStates = value; }
+        private List<string> FinalyStates { get => _finalyStates; set => _finalyStates = value; }
+        private List<string> Alphabet { get => _alphabet; set => _alphabet = value; }
+        private List<string> CurrentState { get => _currentState; set => _currentState = value; }
         //public List<string> OldStates { get => _oldStates; set => _oldStates = value; }
-        public List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
-        public Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
-        public List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
-        public HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
+        private List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
+        private Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
+        private List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
+        private HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
+        private string Priority { get => _priority; set => _priority = value; }
+        private string StopSymbol { get => _stopSymbol; set => _stopSymbol = value; }
 
 
         #endregion
 
         /// <summary>
-        /// Конструктор для считывания автомата из файла
+        /// Конструктор для считывания автомата из файла для 1 и 2 задания
         /// </summary>
         /// <param name="filePath">Путь к файлу с автоматом</param>
         public FiniteStateMachine(string filePath)
@@ -66,16 +72,7 @@ namespace FSM
             CurrentState = new List<string>();
             InterimStates = new HashSet<string>();
 
-            //Информация из файла заносится в DataFile, который состоит из массивов
-            using (StreamReader reader = new StreamReader(filePath))
-            {
-                string line;
-
-                while ((line = reader.ReadLine()) != null)
-                {
-                    DataFile.Add(line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-                }
-            }
+            ReadInformationFromFile(filePath);
 
             //Первый элемент списка DataFile содержит множество состояний
             foreach (var item in DataFile[0])
@@ -86,7 +83,7 @@ namespace FSM
             //Второй элемент списка DataFile содержит алфавит
             foreach (var item in DataFile[1])
             {
-                Alphabet += item;
+                Alphabet.Add(item);
             }
 
             //Третий элемент списка DataFile содержит начальные состояния
@@ -103,13 +100,13 @@ namespace FSM
 
             //После 4 строки (_lineForTransition) идут переходы автомата
             //Каждый переход добавляется в список ListForTransition
-            for (int i = _lineForTransition; i < DataFile.Count; i++)
+            for (int i = _lineForTransition_OneAndTwoTasks; i < DataFile.Count; i++)
             {
                 ListForTransition.Add(DataFile[i]);
             }
 
             //С помощью цикла проходимся по алфавиту и записываем в словарь Transitions Key - символ алфавита и Value - переходы для символа из алфавита
-            for (int i = 0; i < Alphabet.Length; i++)
+            for (int i = 0; i < Alphabet.Count; i++)
             {
                 Transitions.Add(Alphabet[i].ToString(), ListForTransition[i]);
             }
@@ -126,30 +123,135 @@ namespace FSM
         }
 
         /// <summary>
+        /// Конструктор для считывания автомата из файла для 3 задания
+        /// </summary>
+        /// <param name="filePath">Путь к файлу с автоматом</param>
+        /// <param name="flag">Переменная для установки стоп-символа</param>
+        public FiniteStateMachine(string filePath, bool flag)
+        {
+
+            if (flag)
+            {
+                StopSymbol = " ";
+            }
+            else
+            {
+                StopSymbol = "*";
+            }
+
+            States = new List<string>();
+            DataFile = new List<string[]>();
+            InitialStates = new List<string>();
+            FinalyStates = new List<string>();
+            ListForTransition = new List<string[]>();
+            Transitions = new Dictionary<string, string[]>();
+            CurrentState = new List<string>();
+            InterimStates = new HashSet<string>();
+            Alphabet = new List<string>();
+
+            ReadInformationFromFile(filePath);
+
+            //Первый элемент списка DataFile содержит множество состояний
+            foreach (var item in DataFile[0])
+            {
+                States.Add(item);
+            }
+
+            //Второй элемент списка DataFile содержит алфавит
+            foreach (var item in DataFile[1])
+            {
+                Alphabet.Add(item);
+            }
+
+            //Третий элемент списка DataFile содержит начальные состояния
+            foreach (var item in DataFile[2])
+            {
+                InitialStates.Add(item);
+            }
+
+            //Четвертый элемент списка DataFile содержит конечные состояния
+            foreach (var item in DataFile[3])
+            {
+                FinalyStates.Add(item);
+            }
+
+            //Приоритет
+            Priority = DataFile[4].First();
+
+            //После 4 строки (_lineForTransition) идут переходы автомата
+            //Каждый переход добавляется в список ListForTransition
+            for (int i = _lineForTransition_ThreeTask; i < DataFile.Count; i++)
+            {
+                ListForTransition.Add(DataFile[i]);
+            }
+
+            //С помощью цикла проходимся по алфавиту и записываем в словарь Transitions Key - символ алфавита и Value - переходы для символа из алфавита
+            for (int i = 0; i < Alphabet.Count; i++)
+            {
+                Transitions.Add(Alphabet[i].ToString(), ListForTransition[i]);
+            }
+
+            //Проверка на то, что указанные начальные или конечные состояния входят в множество состояний
+            if (!States.ContainsList(InitialStates) || !States.ContainsList(FinalyStates))
+            {
+                throw new Exception("Указанные начальные или конечные состояния не входят в множество состояний.");
+            }
+
+            //Присваивание списку, который содержит текущие состояния, начальных состояний
+            CurrentState = InitialStates;
+        }
+
+        /// <summary>
+        /// Метод для чтения информации из файла
+        /// </summary>
+        /// <param name="filePath">Путь к файлу</param>
+        private void ReadInformationFromFile(string filePath)
+        {
+            //Информация из файла заносится в DataFile, который состоит из массивов
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    DataFile.Add(line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+                }
+            }
+        }
+
+        /// <summary>
         /// Простое переопределение метода ToString() для вывода информации об автомате
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
+
+            string alphabet = "";
+
+            foreach (var item in Alphabet)
+            {
+                alphabet += item + ", ";
+            }
+
             string states = "";
 
             foreach (var item in States)
             {
-                states += item;
+                states += item + ", ";
             }
 
             string initialStates = "";
 
             foreach (var item in InitialStates)
             {
-                initialStates += item;
+                initialStates += item + ", ";
             }
 
             string finallyStates = "";
 
             foreach (var item in FinalyStates)
             {
-                finallyStates += item;
+                finallyStates += item + ", ";
             }
 
             foreach (var item in Transitions)
@@ -164,7 +266,7 @@ namespace FSM
                 Console.WriteLine();
             }
 
-            return $"States: {states}{Environment.NewLine}Alphabet: {Alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}";
+            return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}";
         }
 
         /// <summary>
@@ -219,6 +321,44 @@ namespace FSM
             return new Tuple<bool, int>(result, m);
         }
 
+        public void WordsInText(string input, int k)
+        {
+            string tempString = "";
+
+            //Проход по входной строке
+            for (int i = k; i < input.Length; i++)
+            {
+                //Проверка символов на вхождение в алфавит
+                if (Alphabet.Contains(input[i].ToString()))
+                {
+                    //Вызов функции перехода. Передаём текущие состояния автомата и символ
+                    StateTransitionFunction(CurrentState, input[i].ToString());
+
+                    //в промежуточную строку добавляем символ из входной строки
+                    tempString += input[i];
+
+                    //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
+                    //И продолжаем цикл, пока не пройдём всю входную строку. 
+                    if (CurrentState.ContainsList(FinalyStates))
+                    {
+                        Console.WriteLine($"{tempString} - {Priority}");
+                        tempString = "";
+                        CurrentState = InitialStates;
+                    }
+                    if (CurrentState.Contains(StopSymbol))
+                    {
+                        if (tempString.Length > 1)
+                        {
+                            i--;
+                        }
+                        tempString = "";
+                        CurrentState = InitialStates;
+                    }
+                }
+
+            }
+        }
+
         /// <summary>
         /// Метод для подсчёта максимальной подстроки
         /// </summary>
@@ -248,17 +388,23 @@ namespace FSM
                     {
                         if (output.Length < tempString.Length)
                         {
-                            output = tempString;    
+                            output = tempString;
                         }
                     }
-                    if (String.IsNullOrWhiteSpace(CurrentState.First()))
+                    if (CurrentState.Contains(StopSymbol))
                     {
+                        if (output.Length > 0)
+                        {
+                            Console.WriteLine(output);
+                        }
+
                         if (tempString.Length > 1)
                         {
                             i--;
                         }
                         tempString = "";
-                        
+                        output = "";
+
                         CurrentState = InitialStates;
                     }
                 }
@@ -320,7 +466,7 @@ namespace FSM
                 var valueIndex = States.IndexOf(item);
                 //Этот цикл нужен для извлечения можества состояний, которые поделены знаком '|'. Например, для состояния 2, который может перейти по горизонтали в 1 или 3.
                 //После извлечения состояния добавляются в список промежуточных состояний.
-                foreach (var item2 in Transitions[symbol][valueIndex].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var item2 in Transitions[symbol][valueIndex].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     InterimStates.Add(item2);
                 }
