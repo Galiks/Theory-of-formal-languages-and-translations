@@ -11,7 +11,7 @@ namespace FSM
         static void Main(string[] args)
         {
 
-            string path = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\TextFile2.txt";
+            string path = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\TextFile2.txt";
 
             string _kw = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\KeyWord.txt";
             string _num = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
@@ -41,7 +41,10 @@ namespace FSM
 
             //fsm.CountNumbers(".535wsdqr5456qwe5.5asd------+++++++5.54++-.5", 0);
             //Console.WriteLine("Конец");
-            ////Console.WriteLine();
+            //Console.WriteLine();
+            //fsm.CountNumbers("+5++-.5e5e3e5a34.4", 0);
+            //Console.WriteLine("Конец");
+            //Console.WriteLine();
 
             //fsm.CountNumbers("3e5e3e5", 0);
             //Console.WriteLine("Конец");
@@ -62,7 +65,7 @@ namespace FSM
             //надо сделать отдельный метод для этого!!!!!!!!!!!!
             //ws.CountNumbers(@"\r   \n   \t", 0);
 
-            ID.CountNumbers("asd123_", 0);
+            //ID.CountNumbers("asd123_", 0);
 
             Console.Read();
         }

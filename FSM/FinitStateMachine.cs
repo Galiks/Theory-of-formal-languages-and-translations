@@ -62,7 +62,6 @@ namespace FSM
         /// <param name="filePath">Путь к файлу с автоматом</param>
         public FiniteStateMachine(string filePath)
         {
-
             States = new List<string>();
             DataFile = new List<string[]>();
             InitialStates = new List<string>();
@@ -395,7 +394,11 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
+
                             Console.WriteLine(output);
+
+                            Console.WriteLine(output); 
+
                         }
 
                         if (tempString.Length > 1)
