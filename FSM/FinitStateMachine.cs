@@ -10,6 +10,8 @@ namespace FSM
     {
         private const int _lineForTransition = 4;
 
+        private List<string> numbers = new List<string>();
+
         #region Fields
         //множество состояний
         private List<string> _states;
@@ -257,7 +259,7 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
-                            Console.WriteLine(output); 
+                            numbers.Add(output);
                         }
 
                         if (tempString.Length > 1)
@@ -284,7 +286,6 @@ namespace FSM
         /// а также m - количество вещественных чисел</returns>
         public void CountNumbers(string input, int k)
         {
-            List<string> numbers = new List<string>();
             string number = "";
 
             for (int i = k; i < input.Length; i++)
@@ -297,14 +298,14 @@ namespace FSM
                 {
                     if (!String.IsNullOrEmpty(number) || !String.IsNullOrWhiteSpace(number))
                     {
-                        numbers.Add(MaxStringForNumber(number, 0)); 
+                        numbers.Add((MaxStringForNumber(number, 0))); 
                     }
                     CurrentState = InitialStates;
                     number = "";
                 }
             }
-            
-            numbers.Add(MaxStringForNumber(number, 0));
+
+            numbers.Add((MaxStringForNumber(number, 0)));
 
             numbers.Information();
 
