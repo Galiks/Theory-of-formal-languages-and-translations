@@ -11,7 +11,7 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 5;
 
-        private List<string> numbers = new List<string>();
+        private List<Tuple<string,string>> numbers;
 
         #region Fields
         //множество состояний
@@ -150,6 +150,7 @@ namespace FSM
             CurrentState = new List<string>();
             InterimStates = new HashSet<string>();
             Alphabet = new List<string>();
+            numbers = new List<Tuple<string, string>>();
 
             ReadInformationFromFile(filePath);
 
@@ -397,15 +398,7 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
-<<<<<<< HEAD
                             numbers.Add(output);
-=======
-
-                            Console.WriteLine(output);
-
-                            Console.WriteLine(output); 
-
->>>>>>> 2c105d635b718de13dd01ee7d6ecde35e15164a5
                         }
 
                         if (tempString.Length > 1)
