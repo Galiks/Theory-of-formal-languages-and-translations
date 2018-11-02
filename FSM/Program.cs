@@ -10,31 +10,6 @@ namespace FSM
     {
         static void Main(string[] args)
         {
-
-            //qeqe..12..qeq+123eqe4124a435ek+12.54e+43 --- 1e7+8.9 ----- .535wsdqr5456qwe5.5asd-5.5 ---adcv12asdasd1735qwesdfa47+8.99cd --qwe12w53.5e+3
-
-            //Console.WriteLine();
-
-            //fsm.CountNumbers("3e5e3e55ghj55hg55", 0);
-
-            //Console.WriteLine("Конец");
-
-            //varfuninletendifthenelseval
-
-            //keyWord.WordsInText("varfuninletendifthenelseval", 0);
-
-            //numDouble.CountNumbers("123.123e5e55.5", 0);
-
-            //numInt.CountNumbers("+123+d12", 0);
-
-            //log.WordsInText("trueasdasdtfalsee", 0);
-
-            //op.WordsInText("фывфы/фывф*/-/+andalsosdfsdforelsefsdfnot", 0);
-
-            //надо сделать отдельный метод для этого!!!!!!!!!!!!
-            //ws.CountNumbers(@"\r   \n   \t", 0);
-
-            //ID.CountNumbers("asd123_", 0);
             Task3();
             Console.Read();
         }
@@ -51,6 +26,8 @@ namespace FSM
 
         static void Task3()
         {
+            var machines = new List<FiniteStateMachine>();
+
             #region Path to file
             string _kw = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\KeyWord.txt";
             string _num = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
@@ -79,21 +56,40 @@ namespace FSM
             FiniteStateMachine ID = new FiniteStateMachine(_id, true);
             #endregion
 
+            //Console.WriteLine(ID.ToString());
+
+            machines.AddRange(new List<FiniteStateMachine>()
+            {
+                keyWord,
+                numDouble,
+                numInt,
+                log,
+                op,
+                AS,
+                lb,
+                rb,
+                c,
+                ws,
+                ID
+            });
+
+            FiniteStateMachine.ThreeTask("var a = 5", machines);
+
+            //keyWord.CountNumbers("varfuninletendifthenelseval", 0);
+            //numDouble.CountNumbers("123.123e5e55.5", 0);
+
+            //numInt.CountNumbers("+123+d12", 0);
+
+            //log.CountNumbers("trueasdasdtfalsee", 0);
+
+            //op.CountNumbers("фывфы/фывф*/-/+andalsosdfsdforelsefsdfnot", 0);
 
 
-            keyWord.CountNumbers("varfuninletendifthenelseval", 0);
-            numDouble.CountNumbers("123.123e5e55.5", 0);
+            //ws.CountNumbers(@"  \r\n\t", 0);
 
-            numInt.CountNumbers("+123+d12", 0);
+            Console.WriteLine("The end");
 
-            log.CountNumbers("trueasdasdtfalsee", 0);
-
-            op.CountNumbers("фывфы/фывф*/-/+andalsosdfsdforelsefsdfnot", 0);
-
-            //надо сделать отдельный метод для этого!!!!!!!!!!!!
-            ws.CountNumbers(@"\r   \n   \t", 0);
-
-            ID.CountNumbers("asd123_", 0);
+            //ID.CountNumbers("asd123_", 0);
 
 
         }

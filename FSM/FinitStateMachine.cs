@@ -9,7 +9,7 @@ namespace FSM
     class FiniteStateMachine
     {
         private const int _lineForTransition_OneAndTwoTasks = 4;
-        private const int _lineForTransition_ThreeTask = 5;
+        private const int _lineForTransition_ThreeTask = 6;
 
         private List<Tuple<string,string>> numbers;
 
@@ -38,6 +38,8 @@ namespace FSM
         private string _priority;
         //стоп-символ
         private string _stopSymbol;
+        //имя автомата
+        private string machineName;
         #endregion
 
         #region Property
@@ -54,6 +56,7 @@ namespace FSM
         private HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
         private string Priority { get => _priority; set => _priority = value; }
         private string StopSymbol { get => _stopSymbol; set => _stopSymbol = value; }
+        public string MachineName { get => machineName; set => machineName = value; }
 
 
         #endregion
@@ -181,7 +184,10 @@ namespace FSM
             //Приоритет
             Priority = DataFile[4].First();
 
-            //После 4 строки (_lineForTransition) идут переходы автомата
+            //Имя автомата
+            MachineName = DataFile[5].First();
+
+            //После 6 строки идут переходы автомата
             //Каждый переход добавляется в список ListForTransition
             for (int i = _lineForTransition_ThreeTask; i < DataFile.Count; i++)
             {
@@ -269,7 +275,7 @@ namespace FSM
                 Console.WriteLine();
             }
 
-            return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}";
+            return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}{Environment.NewLine}Name: {MachineName}{Environment.NewLine}Priority: {Priority}";
         }
 
         /// <summary>
@@ -285,7 +291,7 @@ namespace FSM
             string output = "";
             string tempString = "";
 
-            if (InitialStates.ContainsList(FinalyStates))
+            if (ContainsList(InitialStates, FinalyStates))
             {
                 result = true;
                 return new Tuple<bool, int>(result, m);
@@ -305,7 +311,7 @@ namespace FSM
 
                     //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
-                    if (CurrentState.ContainsList(FinalyStates))
+                    if (ContainsList(CurrentState, FinalyStates))
                     {
                         result = true;
                         output = tempString;
@@ -324,51 +330,13 @@ namespace FSM
             return new Tuple<bool, int>(result, m);
         }
 
-        public void WordsInText(string input, int k)
-        {
-            string tempString = "";
-
-            //Проход по входной строке
-            for (int i = k; i < input.Length; i++)
-            {
-                //Проверка символов на вхождение в алфавит
-                if (Alphabet.Contains(input[i].ToString()))
-                {
-                    //Вызов функции перехода. Передаём текущие состояния автомата и символ
-                    StateTransitionFunction(CurrentState, input[i].ToString());
-
-                    //в промежуточную строку добавляем символ из входной строки
-                    tempString += input[i];
-
-                    //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
-                    //И продолжаем цикл, пока не пройдём всю входную строку. 
-                    if (CurrentState.ContainsList(FinalyStates))
-                    {
-                        Console.WriteLine($"{tempString} - {Priority}");
-                        tempString = "";
-                        CurrentState = InitialStates;
-                    }
-                    if (CurrentState.Contains(StopSymbol))
-                    {
-                        if (tempString.Length > 1)
-                        {
-                            i--;
-                        }
-                        tempString = "";
-                        CurrentState = InitialStates;
-                    }
-                }
-
-            }
-        }
-
         /// <summary>
         /// Метод для подсчёта максимальной подстроки
         /// </summary>
         /// <param name="input">Входная строка</param>
         /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         /// <returns>Возвращает Tuple, который содержит result - True или False в зависимости от того, найдена подстрока во входной строке или нет, а также m - длину этой строки</returns>
-        public string MaxStringForNumber(string input, int k)
+        private void MaxStringForNumber(string input, int k)
         {
             string output = "";
             string tempString = "";
@@ -376,6 +344,7 @@ namespace FSM
             //Проход по входной строке
             for (int i = k; i < input.Length; i++)
             {
+                
                 //Проверка символов на вхождение в алфавит
                 if (Alphabet.Contains(input[i].ToString()))
                 {
@@ -387,7 +356,7 @@ namespace FSM
 
                     //Если текущие состояния "достигли" конечных, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
-                    if (CurrentState.ContainsList(FinalyStates))
+                    if (ContainsList(CurrentState, FinalyStates))
                     {
                         if (output.Length < tempString.Length)
                         {
@@ -398,7 +367,7 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
-                            numbers.Add(output);
+                            numbers.Add(new Tuple<string,string>(this.MachineName, output));
                         }
 
                         if (tempString.Length > 1)
@@ -413,7 +382,10 @@ namespace FSM
                 }
             }
 
-            return output;
+            if (output.Length > 0)
+            {
+                numbers.Add(new Tuple<string, string>(this.MachineName, output));
+            }
         }
 
         /// <summary>
@@ -437,18 +409,29 @@ namespace FSM
                 {
                     if (!String.IsNullOrEmpty(number) || !String.IsNullOrWhiteSpace(number))
                     {
-                        numbers.Add((MaxStringForNumber(number, 0))); 
+                        MaxStringForNumber(number, 0); 
                     }
                     CurrentState = InitialStates;
                     number = "";
                 }
             }
 
-            numbers.Add((MaxStringForNumber(number, 0)));
+            MaxStringForNumber(number, 0);
 
             numbers.Information();
 
             CurrentState = InitialStates;
+        }
+
+        public static void ThreeTask(string input, List<FiniteStateMachine> fsm)
+        {
+            foreach (var item in fsm)
+            {
+                for (int i = 0; i < input.Length; i++)
+                {
+
+                }
+            }
         }
 
         /// <summary>
@@ -475,6 +458,15 @@ namespace FSM
             }
             //Присваиваем списку текущих состояний список промежуточных состояний.
             CurrentState = InterimStates.ToList();
+        }
+
+        private bool ContainsList(IEnumerable<string> first, IEnumerable<string> second)
+        {
+            if (first.Intersect(second).Count() > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -9,24 +9,6 @@ namespace FSM
 {
     public static class ListExtension
     {
-        /// <summary>
-        /// Проверяет находятся ли в колекции элементы из другой колекции
-        /// </summary>
-        /// <param name="ilist">Начальная коллекция</param>
-        /// <param name="list">Коллекция для сравнения</param>
-        /// <returns></returns>
-        public static bool ContainsList(this IList ilist, List<int> list)
-        {
-            foreach (var item in list)
-            {
-                if (ilist.Contains(item))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Проверяет находятся ли в колекции элементы из другой колекции
