@@ -61,8 +61,8 @@ namespace FSM
             machines.AddRange(new List<FiniteStateMachine>()
             {
                 keyWord,
-                numDouble,
                 numInt,
+                numDouble,
                 log,
                 op,
                 AS,

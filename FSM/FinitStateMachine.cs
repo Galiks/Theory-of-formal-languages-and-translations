@@ -423,15 +423,16 @@ namespace FSM
             CurrentState = InitialStates;
         }
 
-        public static void ThreeTask(string input, List<FiniteStateMachine> fsm)
+        public static void ThreeTask(string input, List<FiniteStateMachine> fsm, int startIndex = 0)
         {
+            int k = startIndex;
+
             foreach (var item in fsm)
             {
-
                 string tempString = "";
                 string output = "";
 
-                for (int i = 0; i < input.Length; i++)
+                for (int i = k; i < input.Length; i++)
                 {
 
                     if (item.Alphabet.Contains(input[i].ToString()))
@@ -471,6 +472,7 @@ namespace FSM
                     else
                     {
                         numbers.Add(new Tuple<string, string>(item.MachineName, output));
+                        k += output.Length;
                         break;
                     }
                 }
