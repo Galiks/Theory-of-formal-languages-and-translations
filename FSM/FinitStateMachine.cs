@@ -11,7 +11,7 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 6;
 
-        private static List<Tuple<string,string>> numbers;
+        public static List<Tuple<string,string>> numbers;
 
         #region Fields
         //множество состояний
@@ -426,60 +426,135 @@ namespace FSM
         public static void ThreeTask(string input, List<FiniteStateMachine> fsm, int startIndex = 0)
         {
             int k = startIndex;
+            bool end = true;
 
-            foreach (var item in fsm)
+            while (end)
             {
-                string tempString = "";
-                string output = "";
-
-                for (int i = k; i < input.Length; i++)
+                for (int i = 0; i < fsm.Count; i++)
                 {
+                    FiniteStateMachine machine = fsm[i];
 
-                    if (item.Alphabet.Contains(input[i].ToString()))
+                    string tempString = "";
+                    string output = "";
+
+                    for (int j = k; j < input.Length; j++)
                     {
-                        item.StateTransitionFunction(item.CurrentState, input[i].ToString());
-
-                        //в промежуточную строку добавляем символ из входной строки
-                        tempString += input[i];
-
-                        //Если текущие состояния "достигли" конечных, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
-                        //И продолжаем цикл, пока не пройдём всю входную строку. 
-                        if (item.ContainsList(item.CurrentState, item.FinalyStates))
+                        if (machine.Alphabet.Contains(input[j].ToString()))
                         {
-                            if (output.Length < tempString.Length)
+                            machine.StateTransitionFunction(machine.CurrentState, input[j].ToString());
+
+                            tempString += input[j];
+
+                            if (machine.ContainsList(machine.CurrentState, machine.FinalyStates))
                             {
                                 output = tempString;
                             }
+
+                            if (machine.CurrentState.Contains(machine.StopSymbol))
+                            {
+                                if (output.Length > 0)
+                                {
+                                    numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                                }
+
+                                if (tempString.Length > 1)
+                                {
+                                    j--;
+                                }
+
+                                machine.CurrentState = machine.InitialStates;
+                                
+                                break;
+                            }
                         }
-                        if (item.CurrentState.Contains(item.StopSymbol))
+                        if (j == input.Length - 1)
                         {
                             if (output.Length > 0)
                             {
-                                numbers.Add(new Tuple<string, string>(item.MachineName, output));
+                                numbers.Add(new Tuple<string, string>(machine.MachineName, output));
                             }
 
-                            if (tempString.Length > 1)
+                            end = false;
+                            k = j;
+                            break;
+                        }
+                        if (!machine.Alphabet.Contains(input[j].ToString()))
+                        {
+                            if (output.Length > 0)
                             {
-                                i--;
+                                numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                                i = 0;
                             }
-                            tempString = "";
-                            output = "";
+                            k = j;
 
-                            item.CurrentState = item.InitialStates;
+                            break;
                         }
                     }
-
-                    else
-                    {
-                        numbers.Add(new Tuple<string, string>(item.MachineName, output));
-                        k += output.Length;
-                        break;
-                    }
-                }
+                }  
             }
+            
 
             numbers.Information();
-            
+
+            #region Old
+            //int k = startIndex;
+
+            //for (int j = 0; j < fsm.Count; j++)
+            //{
+            //    FiniteStateMachine item = fsm[j];
+            //    string tempString = "";
+            //    string output = "";
+
+            //    for (int i = k; i < input.Length; i++)
+            //    {
+
+            //        if (item.Alphabet.Contains(input[i].ToString()))
+            //        {
+            //            item.StateTransitionFunction(item.CurrentState, input[i].ToString());
+
+            //            //в промежуточную строку добавляем символ из входной строки
+            //            tempString += input[i];
+
+            //            //Если текущие состояния "достигли" конечных, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
+            //            //И продолжаем цикл, пока не пройдём всю входную строку. 
+            //            if (item.ContainsList(item.CurrentState, item.FinalyStates))
+            //            {
+            //                if (output.Length < tempString.Length)
+            //                {
+            //                    output = tempString;
+            //                }
+            //            }
+            //if (item.CurrentState.Contains(item.StopSymbol))
+            //{
+            //    if (output.Length > 0)
+            //    {
+            //        numbers.Add(new Tuple<string, string>(item.MachineName, output));
+            //    }
+
+            //    if (tempString.Length > 1)
+            //    {
+            //        i--;
+            //    }
+            //    tempString = "";
+            //    output = "";
+
+            //    item.CurrentState = item.InitialStates;
+            //}
+            //        }
+
+            //        else
+            //        {
+            //            numbers.Add(new Tuple<string, string>(item.MachineName, output));
+
+            //            k += output.Length;
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //numbers.Information(); 
+            #endregion
+
         }
 
         /// <summary>

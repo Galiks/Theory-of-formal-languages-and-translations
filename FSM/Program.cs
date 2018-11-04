@@ -61,19 +61,19 @@ namespace FSM
             machines.AddRange(new List<FiniteStateMachine>()
             {
                 keyWord,
+                op,
                 numInt,
                 numDouble,
+                ID,
                 log,
-                op,
                 AS,
                 lb,
                 rb,
                 c,
                 ws,
-                ID
             });
 
-            FiniteStateMachine.ThreeTask("var a = 5", machines);
+            FiniteStateMachine.ThreeTask("if(true) var param1 = param2 + 5.5", machines);
 
             //keyWord.CountNumbers("varfuninletendifthenelseval", 0);
             //numDouble.CountNumbers("123.123e5e55.5", 0);
