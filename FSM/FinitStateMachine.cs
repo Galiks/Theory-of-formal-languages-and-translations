@@ -45,17 +45,16 @@ namespace FSM
         #region Property
 
         private List<string> States { get => _states; set => _states = value; }
-        private List<string> InitialStates { get => _initialStates; set => _initialStates = value; }
-        private List<string> FinalyStates { get => _finalyStates; set => _finalyStates = value; }
-        private List<string> Alphabet { get => _alphabet; set => _alphabet = value; }
-        private List<string> CurrentState { get => _currentState; set => _currentState = value; }
-        //public List<string> OldStates { get => _oldStates; set => _oldStates = value; }
+        public List<string> InitialStates { get => _initialStates; set => _initialStates = value; }
+        public List<string> FinalyStates { get => _finalyStates; set => _finalyStates = value; }
+        public List<string> Alphabet { get => _alphabet; set => _alphabet = value; }
+        public List<string> CurrentState { get => _currentState; set => _currentState = value; }
         private List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
         private Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
         private List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
         private HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
         private string Priority { get => _priority; set => _priority = value; }
-        private string StopSymbol { get => _stopSymbol; set => _stopSymbol = value; }
+        public string StopSymbol { get => _stopSymbol; set => _stopSymbol = value; }
         public string MachineName { get => machineName; set => machineName = value; }
 
 
@@ -309,6 +308,8 @@ namespace FSM
                     //в промежуточную строку добавляем символ из входной строки
                     tempString += input[i];
 
+                    Console.WriteLine();
+
                     //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
                     if (ContainsList(CurrentState, FinalyStates))
@@ -423,78 +424,7 @@ namespace FSM
             CurrentState = InitialStates;
         }
 
-        public static void ThreeTask(string input, List<FiniteStateMachine> fsm, int startIndex = 0)
-        {
-            int k = startIndex;
-            bool end = true;
-
-            while (end)
-            {
-                for (int i = 0; i < fsm.Count; i++)
-                {
-                    FiniteStateMachine machine = fsm[i];
-
-                    string tempString = "";
-                    string output = "";
-
-                    for (int j = k; j < input.Length; j++)
-                    {
-                        if (machine.Alphabet.Contains(input[j].ToString()))
-                        {
-                            machine.StateTransitionFunction(machine.CurrentState, input[j].ToString());
-
-                            tempString += input[j];
-
-                            if (machine.ContainsList(machine.CurrentState, machine.FinalyStates))
-                            {
-                                output = tempString;
-                            }
-
-                            if (machine.CurrentState.Contains(machine.StopSymbol))
-                            {
-                                if (output.Length > 0)
-                                {
-                                    numbers.Add(new Tuple<string, string>(machine.MachineName, output));
-                                }
-
-                                if (tempString.Length > 1)
-                                {
-                                    j--;
-                                }
-
-                                machine.CurrentState = machine.InitialStates;
-                                
-                                break;
-                            }
-                        }
-                        if (j == input.Length - 1)
-                        {
-                            if (output.Length > 0)
-                            {
-                                numbers.Add(new Tuple<string, string>(machine.MachineName, output));
-                            }
-
-                            end = false;
-                            k = j;
-                            break;
-                        }
-                        if (!machine.Alphabet.Contains(input[j].ToString()))
-                        {
-                            if (output.Length > 0)
-                            {
-                                numbers.Add(new Tuple<string, string>(machine.MachineName, output));
-                                i = 0;
-                            }
-                            k = j;
-
-                            break;
-                        }
-                    }
-                }  
-            }
-            
-
-            numbers.Information();
+        
 
             #region Old
             //int k = startIndex;
@@ -555,14 +485,14 @@ namespace FSM
             //numbers.Information(); 
             #endregion
 
-        }
+        
 
         /// <summary>
         /// Функция перехода
         /// </summary>
         /// <param name="currentStates">Текущие состояния автомата</param>
         /// <param name="symbol">Симбол автомата</param>
-        private void StateTransitionFunction(List<string> currentStates, string symbol)
+        public void StateTransitionFunction(List<string> currentStates, string symbol)
         {
             //Список промежуточных значений. Используется для хранения значений, который в дальнейшем будут записываться в CurrentState
             InterimStates = new HashSet<string>();
@@ -583,7 +513,7 @@ namespace FSM
             CurrentState = InterimStates.ToList();
         }
 
-        private bool ContainsList(IEnumerable<string> first, IEnumerable<string> second)
+        public bool ContainsList(IEnumerable<string> first, IEnumerable<string> second)
         {
             if (first.Intersect(second).Count() > 0)
             {
