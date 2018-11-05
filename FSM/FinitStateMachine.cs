@@ -227,55 +227,55 @@ namespace FSM
             }
         }
 
-        /// <summary>
-        /// Простое переопределение метода ToString() для вывода информации об автомате
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
+        ///// <summary>
+        ///// Простое переопределение метода ToString() для вывода информации об автомате
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
 
-            string alphabet = "";
+        //    string alphabet = "";
 
-            foreach (var item in Alphabet)
-            {
-                alphabet += item + ", ";
-            }
+        //    foreach (var item in Alphabet)
+        //    {
+        //        alphabet += item + ", ";
+        //    }
 
-            string states = "";
+        //    string states = "";
 
-            foreach (var item in States)
-            {
-                states += item + ", ";
-            }
+        //    foreach (var item in States)
+        //    {
+        //        states += item + ", ";
+        //    }
 
-            string initialStates = "";
+        //    string initialStates = "";
 
-            foreach (var item in InitialStates)
-            {
-                initialStates += item + ", ";
-            }
+        //    foreach (var item in InitialStates)
+        //    {
+        //        initialStates += item + ", ";
+        //    }
 
-            string finallyStates = "";
+        //    string finallyStates = "";
 
-            foreach (var item in FinalyStates)
-            {
-                finallyStates += item + ", ";
-            }
+        //    foreach (var item in FinalyStates)
+        //    {
+        //        finallyStates += item + ", ";
+        //    }
 
-            foreach (var item in Transitions)
-            {
-                Console.Write($"{item.Key}: ");
+        //    foreach (var item in Transitions)
+        //    {
+        //        Console.Write($"{item.Key}: ");
 
-                foreach (var item2 in item.Value)
-                {
-                    Console.Write($"{item2} ");
-                }
+        //        foreach (var item2 in item.Value)
+        //        {
+        //            Console.Write($"{item2} ");
+        //        }
 
-                Console.WriteLine();
-            }
+        //        Console.WriteLine();
+        //    }
 
-            return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}{Environment.NewLine}Name: {MachineName}{Environment.NewLine}Priority: {Priority}";
-        }
+        //    return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}{Environment.NewLine}Name: {MachineName}{Environment.NewLine}Priority: {Priority}";
+        //}
 
         /// <summary>
         /// Метод для подсчёта максимальной подстроки

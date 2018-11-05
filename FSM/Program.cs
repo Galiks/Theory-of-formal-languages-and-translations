@@ -73,7 +73,9 @@ namespace FSM
                 ws,
             });
 
-            ThirdTask.ThreeTask("if (param = patrueram) var qwerty = 5 + .5", machines);
+            //ThirdTask.TestThree("if (param = patrueram) var qwerty = 5 + .5", machines);
+
+            ThirdTask.TestThree("var qwerty = 5 + .5", machines);
 
             Console.WriteLine("The end");
         }
