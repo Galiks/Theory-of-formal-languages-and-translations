@@ -54,7 +54,7 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
-                            FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                            FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
                         }
 
                         if (tempString.Length > 1)
@@ -73,7 +73,7 @@ namespace FSM
                     end = false;
                     if (output.Length > 0)
                     {
-                        FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                        FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
                     }
 
                     return null;
@@ -83,7 +83,7 @@ namespace FSM
                 {
                     if (output.Length > 0)
                     {
-                        FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                        FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
 
                         return input.Substring(j);
                     }
@@ -128,7 +128,7 @@ namespace FSM
                             {
                                 if (output.Length > 0)
                                 {
-                                    FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                                    FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
                                 }
 
                                 if (tempString.Length > 1)
@@ -145,7 +145,7 @@ namespace FSM
                         {
                             if (output.Length > 0)
                             {
-                                FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                                FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
                             }
 
                             end = false;
@@ -156,7 +156,7 @@ namespace FSM
                         {
                             if (output.Length > 0)
                             {
-                                FiniteStateMachine.numbers.Add(new Tuple<string, string>(machine.MachineName, output));
+                                FiniteStateMachine.numbers.Add(new Tuple<FiniteStateMachine, string>(machine, output));
                                 i = 0;
                             }
                             k = j;

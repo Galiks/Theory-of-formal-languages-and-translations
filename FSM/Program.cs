@@ -75,7 +75,9 @@ namespace FSM
 
             //ThirdTask.TestThree("if (param = patrueram) var qwerty = 5 + .5", machines);
 
-            ThirdTask.TestThree("var qwerty = 5 + .5", machines);
+            //ThirdTask.TestThree("var qwerty = 5 + .5", machines);
+
+            FiniteStateMachine.ThirdTask("if (a = t) then var qwerty=5.56 + 6.5", machines, 0);
 
             Console.WriteLine("The end");
         }

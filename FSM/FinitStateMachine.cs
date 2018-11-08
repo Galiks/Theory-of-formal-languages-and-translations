@@ -11,7 +11,9 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 6;
 
-        public static List<Tuple<string,string>> numbers;
+        public static List<Tuple<FiniteStateMachine,string>> numbers;
+
+        public string tempString;
 
         #region Fields
         //множество состояний
@@ -60,6 +62,7 @@ namespace FSM
 
         #endregion
 
+        #region Constructure
         /// <summary>
         /// Конструктор для считывания автомата из файла для 1 и 2 задания
         /// </summary>
@@ -152,7 +155,7 @@ namespace FSM
             CurrentState = new List<string>();
             InterimStates = new HashSet<string>();
             Alphabet = new List<string>();
-            numbers = new List<Tuple<string, string>>();
+            numbers = new List<Tuple<FiniteStateMachine, string>>();
 
             ReadInformationFromFile(filePath);
 
@@ -275,7 +278,8 @@ namespace FSM
         //    }
 
         //    return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}{Environment.NewLine}Name: {MachineName}{Environment.NewLine}Priority: {Priority}";
-        //}
+        //} 
+        #endregion
 
         /// <summary>
         /// Метод для подсчёта максимальной подстроки
@@ -368,7 +372,7 @@ namespace FSM
                     {
                         if (output.Length > 0)
                         {
-                            numbers.Add(new Tuple<string,string>(this.MachineName, output));
+                            numbers.Add(new Tuple<FiniteStateMachine,string>(this, output));
                         }
 
                         if (tempString.Length > 1)
@@ -385,7 +389,7 @@ namespace FSM
 
             if (output.Length > 0)
             {
-                numbers.Add(new Tuple<string, string>(this.MachineName, output));
+                numbers.Add(new Tuple<FiniteStateMachine, string>(this, output));
             }
         }
 
@@ -422,70 +426,7 @@ namespace FSM
             numbers.Information();
 
             CurrentState = InitialStates;
-        }
-
-        
-
-            #region Old
-            //int k = startIndex;
-
-            //for (int j = 0; j < fsm.Count; j++)
-            //{
-            //    FiniteStateMachine item = fsm[j];
-            //    string tempString = "";
-            //    string output = "";
-
-            //    for (int i = k; i < input.Length; i++)
-            //    {
-
-            //        if (item.Alphabet.Contains(input[i].ToString()))
-            //        {
-            //            item.StateTransitionFunction(item.CurrentState, input[i].ToString());
-
-            //            //в промежуточную строку добавляем символ из входной строки
-            //            tempString += input[i];
-
-            //            //Если текущие состояния "достигли" конечных, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
-            //            //И продолжаем цикл, пока не пройдём всю входную строку. 
-            //            if (item.ContainsList(item.CurrentState, item.FinalyStates))
-            //            {
-            //                if (output.Length < tempString.Length)
-            //                {
-            //                    output = tempString;
-            //                }
-            //            }
-            //if (item.CurrentState.Contains(item.StopSymbol))
-            //{
-            //    if (output.Length > 0)
-            //    {
-            //        numbers.Add(new Tuple<string, string>(item.MachineName, output));
-            //    }
-
-            //    if (tempString.Length > 1)
-            //    {
-            //        i--;
-            //    }
-            //    tempString = "";
-            //    output = "";
-
-            //    item.CurrentState = item.InitialStates;
-            //}
-            //        }
-
-            //        else
-            //        {
-            //            numbers.Add(new Tuple<string, string>(item.MachineName, output));
-
-            //            k += output.Length;
-            //            break;
-            //        }
-            //    }
-            //}
-
-            //numbers.Information(); 
-            #endregion
-
-        
+        }        
 
         /// <summary>
         /// Функция перехода
@@ -520,6 +461,98 @@ namespace FSM
                 return true;
             }
             return false;
+        }
+
+        public static void ThirdTask(string input, List<FiniteStateMachine> fsm, int k)
+        {
+            
+
+            for (int i = k; i < input.Length; i++)
+            {
+                for (int j = 0; j < fsm.Count; j++)
+                {
+                    var machine = fsm[j];
+
+                    if (machine.Alphabet.Contains(input[i].ToString()))
+                    {
+                        machine.tempString += input[i];
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(machine.tempString) || !String.IsNullOrWhiteSpace(machine.tempString))
+                        {
+                            machine.MaxStringForNumber(machine.tempString, 0);
+                        }
+                        machine.CurrentState = machine.InitialStates;
+                        machine.tempString = "";
+                    }
+                }
+            }
+
+            for (int i = 0; i < fsm.Count; i++)
+            {
+                fsm[i].MaxStringForNumber(fsm[i].tempString, 0);
+            }
+
+            var dict = new Dictionary<string, string>();
+
+            for (int i = 0; i < numbers.Count - 1; i++)
+            {
+                var currentItem = numbers[i];
+                var nextItem = numbers[i + 1];
+
+                if (currentItem.Item2 == nextItem.Item2)
+                {
+                    if (Int32.Parse(currentItem.Item1.Priority) < Int32.Parse(nextItem.Item1.Priority))
+                    {
+                        numbers.Remove(nextItem);
+                    }
+                    else
+                    {
+                        numbers.Remove(currentItem);
+                    }
+                }
+            }
+
+            for (int i = 0; i < numbers.Count - 1; i++)
+            {
+                var currentItem = numbers[i];
+                var nextItem = numbers[i + 1];
+
+                if (currentItem.Item2.Contains(nextItem.Item2) || nextItem.Item2.Contains(currentItem.Item2))
+                {
+                    if (currentItem.Item2.Length > nextItem.Item2.Length)
+                    {
+                        numbers.Remove(nextItem);
+                        i = -1;
+                    }
+                    else if (currentItem.Item2.Length < nextItem.Item2.Length)
+                    {
+                        numbers.Remove(currentItem);
+                        i = -1;
+                    }
+                    else
+                    {
+                        if (Int32.Parse(currentItem.Item1.Priority) < Int32.Parse(nextItem.Item1.Priority))
+                        {
+                            numbers.Remove(nextItem);
+                        }
+                        else
+                        {
+                            numbers.Remove(currentItem);
+                        }
+
+                        i = 0;
+                    }
+                }
+            }
+
+            foreach (var item in numbers)
+            {
+                Console.WriteLine($"<{ item.Item1.MachineName} : {item.Item2}>");
+            }
+
+            //CurrentState = InitialStates;
         }
     }
 }
