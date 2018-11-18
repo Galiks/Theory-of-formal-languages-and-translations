@@ -10,14 +10,15 @@ namespace FSM
     {
         static void Main(string[] args)
         {
-            Task2();
-            //Task3();
+            
+            //Task2();
+            Task3();
             Console.Read();
         }
 
         static void Task2()
         {
-            string path = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
+            string path = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
 
             FiniteStateMachine finiteStateMachine = new FiniteStateMachine(path, true);
 
@@ -30,17 +31,17 @@ namespace FSM
             var machines = new List<FiniteStateMachine>();
 
             #region Path to file
-            string _kw = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\KeyWord.txt";
-            string _num = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
-            string _num2 = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Int.txt";
-            string _log = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Log.txt";
-            string _op = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\Op.txt";
-            string _as = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\AS.txt";
-            string _lb = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\LB.txt";
-            string _rb = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\RB.txt";
-            string _c = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\C.txt";
-            string _ws = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\WS.txt";
-            string _id = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\ID.txt";
+            string _kw = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\KeyWord.txt";
+            string _num = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Num.txt";
+            string _num2 = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Int.txt";
+            string _log = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Log.txt";
+            string _op = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\Op.txt";
+            string _as = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\AS.txt";
+            string _lb = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\LB.txt";
+            string _rb = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\RB.txt";
+            string _c = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\C.txt";
+            string _ws = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\WS.txt";
+            string _id = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\ID.txt";
             #endregion
 
             #region Automates
@@ -78,7 +79,7 @@ namespace FSM
 
             //FiniteStateMachine.ThirdTask2("if (a=t) then var qwerty=6 + 6.5", machines, 0);
 
-            FiniteStateMachine.ThirdTask2("if var qwer", machines, 0);
+            FiniteStateMachine.ThirdTask("if (a=t) then var qwerty= 6 + 6.5", machines, 0);
 
             Console.WriteLine("The end");
         }

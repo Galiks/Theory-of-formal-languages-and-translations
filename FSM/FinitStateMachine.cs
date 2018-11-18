@@ -13,8 +13,6 @@ namespace FSM
 
         public static List<Tuple<FiniteStateMachine,string>> numbers;
 
-        public string tempString;
-
         #region Fields
         //множество состояний
         private List<string> _states;
@@ -229,56 +227,6 @@ namespace FSM
                 }
             }
         }
-
-        ///// <summary>
-        ///// Простое переопределение метода ToString() для вывода информации об автомате
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ToString()
-        //{
-
-        //    string alphabet = "";
-
-        //    foreach (var item in Alphabet)
-        //    {
-        //        alphabet += item + ", ";
-        //    }
-
-        //    string states = "";
-
-        //    foreach (var item in States)
-        //    {
-        //        states += item + ", ";
-        //    }
-
-        //    string initialStates = "";
-
-        //    foreach (var item in InitialStates)
-        //    {
-        //        initialStates += item + ", ";
-        //    }
-
-        //    string finallyStates = "";
-
-        //    foreach (var item in FinalyStates)
-        //    {
-        //        finallyStates += item + ", ";
-        //    }
-
-        //    foreach (var item in Transitions)
-        //    {
-        //        Console.Write($"{item.Key}: ");
-
-        //        foreach (var item2 in item.Value)
-        //        {
-        //            Console.Write($"{item2} ");
-        //        }
-
-        //        Console.WriteLine();
-        //    }
-
-        //    return $"States: {states}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Initial States: {initialStates}{Environment.NewLine}Finally States: {finallyStates}{Environment.NewLine}Name: {MachineName}{Environment.NewLine}Priority: {Priority}";
-        //} 
         #endregion
 
         /// <summary>
@@ -287,7 +235,7 @@ namespace FSM
         /// <param name="input">Входная строка</param>
         /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         /// <returns>Возвращает Tuple, который содержит result - True или False в зависимости от того, найдена подстрока во входной строке или нет, а также m - длину этой строки</returns>
-        public Tuple<bool, int> MaxString(string input, int k)
+        public Tuple<FiniteStateMachine, string, int> MaxString(string input, int k)
         {
             bool result = false;
             int m = 0;
@@ -297,7 +245,7 @@ namespace FSM
             if (ContainsList(InitialStates, FinalyStates))
             {
                 result = true;
-                return new Tuple<bool, int>(result, m);
+                return new Tuple<FiniteStateMachine, string, int>(this, output, m);
             }
 
             //Проход по входной строке
@@ -325,8 +273,8 @@ namespace FSM
                 {
                     if (result)
                     {
-                        Console.WriteLine($"{this.MachineName} : {output}");
-                        return new Tuple<bool, int>(result, m);
+                        //Console.WriteLine($"{this.MachineName} : {output}");
+                        return new Tuple<FiniteStateMachine,string, int>(this, output, m);
                     }
                     break;
                 }
@@ -335,10 +283,10 @@ namespace FSM
 
             if (result)
             {
-                Console.WriteLine($"{this.MachineName} : {output}");
+                //Console.WriteLine($"{this.MachineName} : {output}");
             }
 
-            return new Tuple<bool, int>(result, 0);
+            return new Tuple<FiniteStateMachine,string, int>(this, output, m);
         }
 
         /// <summary>
@@ -469,112 +417,51 @@ namespace FSM
             return false;
         }
 
+        /// <summary>
+        /// Метод для 3 задания. Выводит токены и слова.
+        /// </summary>
+        /// <param name="input">Входная строка</param>
+        /// <param name="fsm">Список автоматов</param>
+        /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         public static void ThirdTask(string input, List<FiniteStateMachine> fsm, int k)
         {
-            
+            Tuple<FiniteStateMachine,string, int> old_K = new Tuple<FiniteStateMachine,string, int>(null,null, k);
 
-            for (int i = k; i < input.Length; i++)
+            while (k < input.Length)
             {
-                for (int j = 0; j < fsm.Count; j++)
-                {
-                    var machine = fsm[j];
-
-                    if (machine.Alphabet.Contains(input[i].ToString()))
-                    {
-                        machine.tempString += input[i];
-                    }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(machine.tempString) || !String.IsNullOrWhiteSpace(machine.tempString))
-                        {
-                            machine.MaxStringForNumber(machine.tempString, 0);
-                        }
-                        machine.CurrentState = machine.InitialStates;
-                        machine.tempString = "";
-                    }
-                }
-            }
-
-            for (int i = 0; i < fsm.Count; i++)
-            {
-                fsm[i].MaxStringForNumber(fsm[i].tempString, 0);
-            }
-
-            for (int i = 0; i < numbers.Count - 1; i++)
-            {
-                var currentItem = numbers[i];
-                var nextItem = numbers[i + 1];
-
-                if (currentItem.Item2 == nextItem.Item2)
-                {
-                    if (Int32.Parse(currentItem.Item1.Priority) < Int32.Parse(nextItem.Item1.Priority))
-                    {
-                        numbers.Remove(nextItem);
-                    }
-                    else
-                    {
-                        numbers.Remove(currentItem);
-                    }
-                }
-            }
-
-            for (int i = 0; i < numbers.Count - 1; i++)
-            {
-                var currentItem = numbers[i];
-                var nextItem = numbers[i + 1];
-
-                var currentItemIndex = i;
-                var nextItemIndex = i + 1;
-
-
-                if (currentItem.Item2.Contains(nextItem.Item2) || nextItem.Item2.Contains(currentItem.Item2))
-                {
-                    if (currentItem.Item2.Length > nextItem.Item2.Length)
-                    {
-                        numbers.RemoveAt(nextItemIndex);
-                        i = 0;
-                    }
-                    else if (currentItem.Item2.Length < nextItem.Item2.Length)
-                    {
-                        numbers.RemoveAt(currentItemIndex);
-                        i = 0;
-                    }
-                    else
-                    {
-                        if (Int32.Parse(currentItem.Item1.Priority) < Int32.Parse(nextItem.Item1.Priority))
-                        {
-                            numbers.RemoveAt(nextItemIndex);
-                        }
-                        else
-                        {
-                            numbers.RemoveAt(currentItemIndex);
-                        }
-
-                        i = 0;
-                    }
-                }
-            }
-
-
-
-            foreach (var item in numbers)
-            {
-                Console.WriteLine($"<{ item.Item1.MachineName} : {item.Item2}>");
-            }
-
-            //CurrentState = InitialStates;
-        }
-
-        public static void ThirdTask2(string input, List<FiniteStateMachine> fsm, int k)
-        {
-
-            
                 for (int i = 0; i < fsm.Count; i++)
                 {
                     var machine = fsm[i];
 
-                    k += machine.MaxString(input, k).Item2;
-                } 
+                    var new_K = machine.MaxString(input, k);
+
+                    if (new_K.Item3 > old_K.Item3)
+                    {
+                        old_K = new_K;
+                    }
+
+                    if (new_K.Item3 == old_K.Item3)
+                    {
+                        if (old_K.Item1 != null)
+                        {
+                            if (new_K.Item1.Priority.CompareTo(old_K.Item1.Priority) == -1)
+                            {
+                                old_K = new_K;
+                            } 
+                        }
+                    }
+
+                    machine.CurrentState = machine.InitialStates;
+                }
+
+                Console.WriteLine($"{old_K.Item1.MachineName} : {old_K.Item2}");
+
+                k += old_K.Item3;
+
+                old_K = new Tuple<FiniteStateMachine,string, int>(null,null,0);
+
+            }
+
         }
     }
 }
