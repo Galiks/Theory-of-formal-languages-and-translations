@@ -312,8 +312,6 @@ namespace FSM
                     //в промежуточную строку добавляем символ из входной строки
                     tempString += input[i];
 
-                    Console.WriteLine();
-
                     //Если текущие состояния "достигли" конечные, то result присваиваем True, в строку output записываем найденную построку, а m присваиваем длину найденной подстроки. 
                     //И продолжаем цикл, пока не пройдём всю входную строку. 
                     if (ContainsList(CurrentState, FinalyStates))
@@ -325,14 +323,22 @@ namespace FSM
                 }
                 else
                 {
-                    throw new Exception("В алфавите нет таких символов");
+                    if (result)
+                    {
+                        Console.WriteLine($"{this.MachineName} : {output}");
+                        return new Tuple<bool, int>(result, m);
+                    }
+                    break;
                 }
 
             }
 
-            Console.WriteLine($"{output} : {output.Length}");
+            if (result)
+            {
+                Console.WriteLine($"{this.MachineName} : {output}");
+            }
 
-            return new Tuple<bool, int>(result, m);
+            return new Tuple<bool, int>(result, 0);
         }
 
         /// <summary>
@@ -494,8 +500,6 @@ namespace FSM
                 fsm[i].MaxStringForNumber(fsm[i].tempString, 0);
             }
 
-            var dict = new Dictionary<string, string>();
-
             for (int i = 0; i < numbers.Count - 1; i++)
             {
                 var currentItem = numbers[i];
@@ -519,27 +523,31 @@ namespace FSM
                 var currentItem = numbers[i];
                 var nextItem = numbers[i + 1];
 
+                var currentItemIndex = i;
+                var nextItemIndex = i + 1;
+
+
                 if (currentItem.Item2.Contains(nextItem.Item2) || nextItem.Item2.Contains(currentItem.Item2))
                 {
                     if (currentItem.Item2.Length > nextItem.Item2.Length)
                     {
-                        numbers.Remove(nextItem);
-                        i = -1;
+                        numbers.RemoveAt(nextItemIndex);
+                        i = 0;
                     }
                     else if (currentItem.Item2.Length < nextItem.Item2.Length)
                     {
-                        numbers.Remove(currentItem);
-                        i = -1;
+                        numbers.RemoveAt(currentItemIndex);
+                        i = 0;
                     }
                     else
                     {
                         if (Int32.Parse(currentItem.Item1.Priority) < Int32.Parse(nextItem.Item1.Priority))
                         {
-                            numbers.Remove(nextItem);
+                            numbers.RemoveAt(nextItemIndex);
                         }
                         else
                         {
-                            numbers.Remove(currentItem);
+                            numbers.RemoveAt(currentItemIndex);
                         }
 
                         i = 0;
@@ -547,12 +555,26 @@ namespace FSM
                 }
             }
 
+
+
             foreach (var item in numbers)
             {
                 Console.WriteLine($"<{ item.Item1.MachineName} : {item.Item2}>");
             }
 
             //CurrentState = InitialStates;
+        }
+
+        public static void ThirdTask2(string input, List<FiniteStateMachine> fsm, int k)
+        {
+
+            
+                for (int i = 0; i < fsm.Count; i++)
+                {
+                    var machine = fsm[i];
+
+                    k += machine.MaxString(input, k).Item2;
+                } 
         }
     }
 }
