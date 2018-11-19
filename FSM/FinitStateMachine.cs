@@ -11,6 +11,8 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 6;
 
+        private static string outputFile = @"C:\Users\contest\Downloads\Theory-of-formal-languages-and-translations-First\Theory-of-formal-languages-and-translations-First\FSM\outputFile.txt";
+
         public static List<Tuple<FiniteStateMachine,string>> numbers;
 
         #region Fields
@@ -281,11 +283,6 @@ namespace FSM
 
             }
 
-            if (result)
-            {
-                //Console.WriteLine($"{this.MachineName} : {output}");
-            }
-
             return new Tuple<FiniteStateMachine,string, int>(this, output, m);
         }
 
@@ -425,6 +422,8 @@ namespace FSM
         /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         public static void ThirdTask(string input, List<FiniteStateMachine> fsm, int k)
         {
+            
+
             Tuple<FiniteStateMachine,string, int> old_K = new Tuple<FiniteStateMachine,string, int>(null,null, k);
 
             while (k < input.Length)
@@ -454,14 +453,17 @@ namespace FSM
                     machine.CurrentState = machine.InitialStates;
                 }
 
-                Console.WriteLine($"{old_K.Item1.MachineName} : {old_K.Item2}");
+
+                using (StreamWriter writer = File.AppendText(outputFile))
+                {
+                    writer.WriteLine($"{old_K.Item1.MachineName} : {old_K.Item2}"); 
+                }
 
                 k += old_K.Item3;
 
                 old_K = new Tuple<FiniteStateMachine,string, int>(null,null,0);
 
             }
-
         }
     }
 }
