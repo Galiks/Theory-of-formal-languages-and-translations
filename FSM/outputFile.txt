@@ -1,0 +1,27 @@
+keyWord : var
+WS :  
+ID : a
+WS :  
+AS : =
+WS :  
+Int : 5
+WS : \n\t
+keyWord : var
+WS :  
+ID : b
+WS :  
+AS : =
+WS :  
+Int : 6
+WS : \n
+keyWord : var
+WS :  
+ID : c
+WS :  
+AS : =
+WS :  
+ID : a
+WS :  
+Op : +
+WS :  
+ID : b

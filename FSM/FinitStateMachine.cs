@@ -11,7 +11,7 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 6;
 
-        private static string outputFile = @"C:\Users\contest\Downloads\Theory-of-formal-languages-and-translations-First\Theory-of-formal-languages-and-translations-First\FSM\outputFile.txt";
+        private static string outputFile = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\outputFile.txt";
 
         public static List<Tuple<FiniteStateMachine,string>> numbers;
 
@@ -426,7 +426,7 @@ namespace FSM
 
             Tuple<FiniteStateMachine,string, int> old_K = new Tuple<FiniteStateMachine,string, int>(null,null, k);
 
-            while (k < input.Length)
+            while (k < input.ToString().Length)
             {
                 for (int i = 0; i < fsm.Count; i++)
                 {
