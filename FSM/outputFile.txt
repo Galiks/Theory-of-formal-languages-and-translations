@@ -4,8 +4,8 @@ ID : a
 WS :  
 AS : =
 WS :  
-Int : 5
-WS : \n\t
+Int : 6
+WS : \n
 keyWord : var
 WS :  
 ID : b
@@ -14,9 +14,17 @@ AS : =
 WS :  
 Int : 6
 WS : \n
+keyWord : if
+WS :  
+ID : a
+WS :  
+AS : =
+WS :  
+ID : b
+WS : \n\t
 keyWord : var
 WS :  
-ID : c
+ID : b
 WS :  
 AS : =
 WS :  
@@ -24,4 +32,4 @@ ID : a
 WS :  
 Op : +
 WS :  
-ID : b
+ID : c

@@ -422,8 +422,6 @@ namespace FSM
         /// <param name="k">Позиция, с которой начнётся перебор входной строки</param>
         public static void ThirdTask(string input, List<FiniteStateMachine> fsm, int k)
         {
-            
-
             Tuple<FiniteStateMachine,string, int> old_K = new Tuple<FiniteStateMachine,string, int>(null,null, k);
 
             while (k < input.ToString().Length)
