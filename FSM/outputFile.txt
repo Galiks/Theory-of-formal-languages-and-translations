@@ -33,3 +33,13 @@ WS :
 Op : +
 WS :  
 ID : c
+WS : \n
+keyWord : fun
+WS :  
+keyWord : var
+WS :  
+ID : c
+WS :  
+AS : =
+WS :  
+Int : 0

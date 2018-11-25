@@ -1,0 +1,7 @@
+as_begin,=
+=
+as_begin
+=
+6
+AS
+=, 

@@ -11,11 +11,9 @@ namespace FSM
         private const int _lineForTransition_OneAndTwoTasks = 4;
         private const int _lineForTransition_ThreeTask = 6;
 
-        private static string outputFile = @"E:\Documents\GitHub\Theory-of-formal-languages-and-translations\FSM\outputFile.txt";
-
-        public static List<Tuple<FiniteStateMachine,string>> numbers;
-
         #region Fields
+        private static string outputFile = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\outputFile.txt";
+        private static List<Tuple<FiniteStateMachine, string>> numbers;
         //множество состояний
         private List<string> _states;
         //множество начальных состояний
@@ -32,6 +30,8 @@ namespace FSM
         private List<string[]> _dataFile;
         //переходы для одного символа
         private List<string[]> _listForTransition;
+        //после любви с масивами я решил изменить массив на список
+        private List<List<string>> _newListForTransition;
         //переходы
         private Dictionary<string, string[]> _transitions;
         //список для записей промежуточных состояний автомата
@@ -46,23 +46,26 @@ namespace FSM
 
         #region Property
 
-        private List<string> States { get => _states; set => _states = value; }
+        public List<string> States { get => _states; set => _states = value; }
         public List<string> InitialStates { get => _initialStates; set => _initialStates = value; }
         public List<string> FinalyStates { get => _finalyStates; set => _finalyStates = value; }
         public List<string> Alphabet { get => _alphabet; set => _alphabet = value; }
         public List<string> CurrentState { get => _currentState; set => _currentState = value; }
-        private List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
-        private Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
-        private List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
-        private HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
-        private string Priority { get => _priority; set => _priority = value; }
+        public List<string[]> DataFile { get => _dataFile; set => _dataFile = value; }
+        public Dictionary<string, string[]> Transitions { get => _transitions; set => _transitions = value; }
+        public List<string[]> ListForTransition { get => _listForTransition; set => _listForTransition = value; }
+        public HashSet<string> InterimStates { get => _interimStates; set => _interimStates = value; }
+        public string Priority { get => _priority; set => _priority = value; }
         public string StopSymbol { get => _stopSymbol; set => _stopSymbol = value; }
         public string MachineName { get => machineName; set => machineName = value; }
+        public static string OutputFile { get => outputFile; set => outputFile = value; }
+        public List<List<string>> NewListForTransition { get => _newListForTransition; set => _newListForTransition = value; }
 
 
         #endregion
 
         #region Constructure
+
         /// <summary>
         /// Конструктор для считывания автомата из файла для 1 и 2 задания
         /// </summary>
@@ -211,6 +214,46 @@ namespace FSM
             //Присваивание списку, который содержит текущие состояния, начальных состояний
             CurrentState = InitialStates;
         }
+
+        /// <summary>
+        /// Конструктор для создания автомата не из файла
+        /// </summary>
+        /// <param name="states">Список состояний</param>
+        /// <param name="initialStates">Список начальных состояний</param>
+        /// <param name="finalyStates">Список конечных состояний</param>
+        /// <param name="alphabet">Алфавит автомата</param>
+        /// <param name="currentState">Текущее состояние</param>
+        /// <param name="transitions">Словать переходов, где key - символ, value - переход в состояние</param>
+        /// <param name="listForTransition">Список состояний для перехода</param>
+        /// <param name="priority">Приоритет автомата</param>
+        /// <param name="stopSymbol">Стоп символ</param>
+        /// <param name="machineName">Имя автомата</param>
+        public FiniteStateMachine(List<string> states, 
+            List<string> initialStates, 
+            List<string> finalyStates, 
+            List<string> alphabet, 
+            List<string> currentState, 
+            Dictionary<string, string[]> transitions, 
+            List<List<string>> listForTransition, 
+            HashSet<string> interimStates, 
+            string priority, 
+            string stopSymbol, 
+            string machineName)
+        {
+            States = states ?? throw new ArgumentNullException(nameof(states));
+            InitialStates = initialStates ?? throw new ArgumentNullException(nameof(initialStates));
+            FinalyStates = finalyStates ?? throw new ArgumentNullException(nameof(finalyStates));
+            Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
+            CurrentState = currentState ?? throw new ArgumentNullException(nameof(currentState));
+            Transitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
+            NewListForTransition = listForTransition ?? throw new ArgumentNullException(nameof(listForTransition));
+            InterimStates = interimStates ?? throw new ArgumentNullException(nameof(interimStates));
+            Priority = priority ?? throw new ArgumentNullException(nameof(priority));
+            StopSymbol = stopSymbol ?? throw new ArgumentNullException(nameof(stopSymbol));
+            MachineName = machineName ?? throw new ArgumentNullException(nameof(machineName));
+        }
+
+
 
         /// <summary>
         /// Метод для чтения информации из файла
@@ -396,7 +439,7 @@ namespace FSM
                 var valueIndex = States.IndexOf(item);
                 //Этот цикл нужен для извлечения можества состояний, которые поделены знаком '|'. Например, для состояния 2, который может перейти по горизонтали в 1 или 3.
                 //После извлечения состояния добавляются в список промежуточных состояний.
-                foreach (var item2 in Transitions[symbol][valueIndex].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var item2 in Transitions[symbol][valueIndex].Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     InterimStates.Add(item2);
                 }
@@ -424,7 +467,7 @@ namespace FSM
         {
             Tuple<FiniteStateMachine,string, int> old_K = new Tuple<FiniteStateMachine,string, int>(null,null, k);
 
-            while (k < input.ToString().Length)
+            while (k < input.Length)
             {
                 for (int i = 0; i < fsm.Count; i++)
                 {
@@ -452,7 +495,7 @@ namespace FSM
                 }
 
 
-                using (StreamWriter writer = File.AppendText(outputFile))
+                using (StreamWriter writer = File.AppendText(OutputFile))
                 {
                     writer.WriteLine($"{old_K.Item1.MachineName} : {old_K.Item2}"); 
                 }

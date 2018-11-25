@@ -2,3 +2,4 @@ var a = 6
 var b = 6
 if a = b
 	var b = a + c
+fun var c = 0
