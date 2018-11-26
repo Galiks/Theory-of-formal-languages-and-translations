@@ -1,45 +1,12 @@
-keyWord : var
-WS :  
-ID : a
-WS :  
-AS : =
-WS :  
-Int : 6
-WS : \n
-keyWord : var
-WS :  
-ID : b
-WS :  
-AS : =
-WS :  
-Int : 6
-WS : \n
-keyWord : if
-WS :  
-ID : a
-WS :  
-AS : =
-WS :  
-ID : b
-WS : \n\t
-keyWord : var
-WS :  
-ID : b
-WS :  
-AS : =
-WS :  
-ID : a
-WS :  
-Op : +
-WS :  
-ID : c
-WS : \n
-keyWord : fun
-WS :  
-keyWord : var
-WS :  
-ID : c
-WS :  
-AS : =
-WS :  
-Int : 0
+<WS : \t>
+<keyWord : var>
+<WS :  >
+<ID : c>
+<WS :  >
+<AS : =>
+<WS : \t >
+<ID : a>
+<WS :  >
+<Op : +>
+<WS :  >
+<ID : b>

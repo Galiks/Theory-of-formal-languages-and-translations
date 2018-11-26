@@ -14,8 +14,8 @@ namespace FSM
 
 
             //Task2();
-            //Task3();
-            Task4();
+            Task3();
+            //Task4();
             Console.Read();
         }
 
@@ -82,35 +82,35 @@ namespace FSM
             });
 
             #region Main
-            //string inputFile = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\inputFile.txt";
+            string inputFile = @"E:\Документы\GitHub\Theory-of-formal-languages-and-translations\FSM\inputFile.txt";
 
-            //using (StreamReader reader = new StreamReader(inputFile))
-            //{
-            //    string line;
-            //    int i = 0;
-            //    while ((line = reader.ReadLine()) != null)
-            //    {
-            //        if (line.Contains("\t"))
-            //        {
-            //            line = @"\t" + line.Substring(1);
-            //        }
-            //        if (line.Contains("\r"))
-            //        {
-            //            line = @"\r" + line.Substring(1);
-            //        }
-            //        Console.WriteLine(line);
-            //        if (i != 0)
-            //        {
-            //            FiniteStateMachine.ThirdTask(@"\n" + line, machines, 0);
-            //            i++;
-            //        }
-            //        else
-            //        {
-            //            FiniteStateMachine.ThirdTask(line, machines, 0);
-            //            i++;
-            //        }
-            //    }
-            //}
+            using (StreamReader reader = new StreamReader(inputFile))
+            {
+                string line;
+                int i = 0;
+                while ((line = reader.ReadLine()) != null)
+                {               
+                    while (line.Contains("\t"))
+                    {
+                        line = line.Replace("\t", @"\t");
+                    }
+                    if (line.Contains("\r"))
+                    {
+                        line = @"\r" + line.Substring(1);
+                    }
+                    Console.WriteLine(line);
+                    if (i != 0)
+                    {
+                        FiniteStateMachine.ThirdTask(@"\n" + line, machines, 0);
+                        i++;
+                    }
+                    else
+                    {
+                        FiniteStateMachine.ThirdTask(line, machines, 0);
+                        i++;
+                    }
+                }
+            }
             #endregion
 
             Console.WriteLine("The end");
