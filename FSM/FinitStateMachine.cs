@@ -492,7 +492,7 @@ namespace FSM
 
                 using (StreamWriter writer = File.AppendText(OutputFile))
                 {
-                    writer.WriteLine($"{old_K.Item1.MachineName} : {old_K.Item2}"); 
+                    writer.WriteLine($"<{old_K.Item1.MachineName} : {old_K.Item2}>"); 
                 }
 
                 k += old_K.Item3;
