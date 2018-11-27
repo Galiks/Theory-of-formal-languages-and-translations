@@ -14,8 +14,8 @@ namespace FSM
 
 
             //Task2();
-            Task3();
-            //Task4();
+            //Task3();
+            Task4();
             Console.Read();
         }
 

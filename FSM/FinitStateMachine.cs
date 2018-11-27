@@ -233,7 +233,7 @@ namespace FSM
             List<string> initialStates, 
             List<string> finalyStates, 
             List<string> alphabet, 
-            Dictionary<string, List<string>> transitions,
+            Dictionary<string, string[]> transitions,
             string priority, 
             string stopSymbol, 
             string machineName)
@@ -242,10 +242,12 @@ namespace FSM
             InitialStates = initialStates ?? throw new ArgumentNullException(nameof(initialStates));
             FinalyStates = finalyStates ?? throw new ArgumentNullException(nameof(finalyStates));
             Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
-            NewTransitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
+            Transitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
             Priority = priority ?? throw new ArgumentNullException(nameof(priority));
             StopSymbol = stopSymbol ?? throw new ArgumentNullException(nameof(stopSymbol));
             MachineName = machineName ?? throw new ArgumentNullException(nameof(machineName));
+            CurrentState = new List<string>(InitialStates);
+            StopSymbol = " ";
         }
 
 
@@ -268,6 +270,45 @@ namespace FSM
             }
         }
         #endregion
+
+        //public override string ToString()
+        //{
+        //    string alphabet = "";
+        //    foreach (var item in this.Alphabet)
+        //    {
+        //        alphabet += item;
+        //    }
+
+        //    string transition = "";
+        //    foreach (var item in this.NewTransitions)
+        //    {
+        //        transition += "KEY: " + item.Key + "\nValue: ";
+        //        foreach (var item2 in item.Value)
+        //        {
+        //            transition += item2;
+        //        }
+        //    }
+
+        //    string states = "";
+        //    foreach (var item in this.States)
+        //    {
+        //        states += item;
+        //    }
+
+        //    string initialState = "";
+        //    foreach (var item in this.InitialStates)
+        //    {
+        //        initialState += item;
+        //    }
+
+        //    string finallyState = "";
+        //    foreach (var item in this.FinalyStates)
+        //    {
+        //        finallyState += item;
+        //    }
+        //    return $"Name: {this.MachineName}{Environment.NewLine}Alphabet: {alphabet}{Environment.NewLine}Transitions: {transition}{Environment.NewLine}States: {states}{Environment.NewLine}Initial State: {initialState}{Environment.NewLine}Finally State: {finallyState}";
+        //}
+
 
         /// <summary>
         /// Метод для подсчёта максимальной подстроки

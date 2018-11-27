@@ -8,6 +8,8 @@ namespace FSM
 {
     class MyRegex
     {
+
+        private static int indexOfState = 0;
         //ID: ^\w+\d*        
         //KW: var|fun|in|let|end|if|then|else|val        
         //INT: \d+        
@@ -34,9 +36,7 @@ namespace FSM
         private List<string> initialStates;
         private List<string> finalyStates;
         private List<string> alphabet;
-        private List<string> currentState;
-        private Dictionary<string, List<string>> transitions;
-        private List<List<string>> listForTransition;
+        private Dictionary<string, string[]> transitions;
         private string priority;
         private string stopSymbol;
         private string machineName;
@@ -86,186 +86,94 @@ namespace FSM
             #endregion
         }
 
+        public static int IndexOfState { get => indexOfState; set => indexOfState = value; }
+
         public void MainFunc()
         {
             List<string> operations = new List<string>() {"*", "%", "|", "(", ")"};
-            List<string> specialSymbol = new List<string>() { "/d", "/w", "/s" };
+            string preSpecialSymbol = "/";
+            List<string> specialSymbol = new List<string>() {"d", "w", "s" };
 
             List<string> listOfOperations = new List<string>();
 
-            List<FiniteStateMachine> machines = new List<FiniteStateMachine>();
+            List<Object> machines = new List<Object>();
 
             //список для listOfTrnsition
             List<string> tempList = new List<string>();
 
-            string regex = "var|if";
+            //string regex = "var|if*/d";
+
+            string regex = "v";
 
             for (int i = 0; i < regex.Length; i++)
             {
-                if (!operations.Contains(regex[i].ToString()) && !specialSymbol.Contains(regex[i].ToString()))
+                if (!operations.Contains(regex[i].ToString()) 
+                    && !specialSymbol.Contains(regex[i].ToString()) 
+                    && regex[i].ToString() != preSpecialSymbol)
                 {
-                    CreateAutomate(regex[i].ToString(), i);
+                    if (machines.Count > 0)
+                    {
+                        machines.Add(CreateAutomate(regex[i].ToString(), i + 1));                       
+                    }
+                    else
+                    {
+                        machines.Add(CreateAutomate(regex[i].ToString(), i + 1));
+                    }
                 }
+                //if (regex[i].ToString() == @"/")
+                //{
+                //    if (specialSymbol.Contains(regex[i+1].ToString()))
+                //    {
+                //        var specSynmol = preSpecialSymbol + regex[i+1].ToString();
+                //    }
+                //}
+                //else
+                //{
+                //    machines.Add(regex[i].ToString());
+                //}
             }
 
-            #region wadsfgh
-    //        for (int i = 0; i < regex.Length; i++)
-    //        {
-
-    //            #region MyRegion
-    //            //initial state
-    //            if (i == 0 || operations.Contains(regex[i - 1].ToString()))
-    //            {
-    //                tempList.Add(regex[i].ToString());
-    //            }
-
-    //            if (!operations.Contains(regex[i].ToString()))
-    //            {
-    //                //alphabet
-    //                if (!alphabet.Contains(regex[i].ToString()))
-    //                {
-    //                    alphabet.Add(regex[i].ToString());
-    //                }
-
-    //                //states
-    //                if (!states.Contains(regex[i].ToString()))
-    //                {
-    //                    states.Add(regex[i].ToString());
-    //                }
-    //            }
-    //        }
-
-
-    //        //finally state
-    //        if (i == regex.Length - 1)
-    //        {
-    //            finalyStates.Add(regex[i].ToString());
-    //        }
-    //        else if (operations.Contains(regex[i].ToString()))
-    //        {
-    //            finalyStates.Add(regex[i - 1].ToString());
-    //        }
-    //    }
-    //    #endregion
-
-    //    //listForTransition.Add(tempList);
-
-    //    //transitions.Add(initialStates.First(), tempList);
-
-
-    //    //foreach (var item in states)
-    //    //{
-    //    //    Console.Write(item);
-    //    //}
-
-    //    //Console.WriteLine();
-
-    //    //foreach (var item in alphabet)
-    //    //{
-    //    //    Console.Write(item);
-    //    //}
-
-    //    //Console.WriteLine();
-
-    //    //foreach (var item in initialStates)
-    //    //{
-    //    //    Console.Write(item);
-    //    //}
-
-    //    //Console.WriteLine();
-
-    //    //foreach (var item in finalyStates)
-    //    //{
-    //    //    Console.Write(item);
-    //    //}
-
-    //    Console.WriteLine();
-    //        Console.WriteLine("KEY");
-
-    //        foreach (var item in transitions)
-    //        {
-    //            Console.Write(item.Key + ": ");
-    //            foreach (var item2 in item.Value)
-    //            {
-    //                Console.Write(item2);
-    //            }
-    //Console.WriteLine();
-    //        }
-
-    //        #region qweqweqw
-    //        //states.AddRange(AS.States.Union(lb.States));
-
-    //        //Console.WriteLine("states: ");
-    //        //foreach (var item in states)
-    //        //{
-    //        //    Console.WriteLine(item);
-    //        //}
-
-    //        //alphabet.AddRange(AS.Alphabet.Union(lb.Alphabet));
-
-    //        //Console.WriteLine("alphabet: ");
-    //        //foreach (var item in alphabet)
-    //        //{
-    //        //    Console.WriteLine(item);
-    //        //}
-
-    //        //Console.WriteLine("initial states: ");
-    //        //initialStates.AddRange(AS.InitialStates);
-
-    //        //foreach (var item in initialStates)
-    //        //{
-    //        //    Console.WriteLine(item);
-    //        //}
-
-    //        //finalyStates.AddRange(lb.FinalyStates);
-
-    //        //Console.WriteLine("Finally states: ");
-
-    //        //foreach (var item in finalyStates)
-    //        //{
-    //        //    Console.WriteLine(item);
-    //        //}
-
-    //        //var machines = new List<FiniteStateMachine>();
-    //        //machines.AddRange(new List<FiniteStateMachine>()
-    //        //{
-    //        //    lb,
-    //        //    ws,
-    //        //});
-
-    //        //AddTransitions(machines);
-
-
-            #endregion
+            foreach (var item in machines)
+            {
+                Console.WriteLine(item);
+            }
         } 
 	    
-        private void CreateAutomate(string letter, int index)
+        private FiniteStateMachine CreateAutomate(string letter, int index)
         {
+            indexOfState++;
+            int initialStatesTemp = IndexOfState;
+            IndexOfState++;
+            int finallyStateTemp = IndexOfState;
             alphabet = new List<string>() { letter };
-            states = new List<string>() { index.ToString(), (index+1).ToString() };
-            initialStates = new List<string>() { index.ToString() };
-            finalyStates = new List<string>() { (index + 1).ToString() };
-            transitions = new Dictionary<string, List<string>>();
+            states = new List<string>() { initialStatesTemp.ToString(), finallyStateTemp.ToString() };
+            initialStates = new List<string>() { initialStatesTemp.ToString() };
+            finalyStates = new List<string>() { finallyStateTemp.ToString() };
+            transitions = new Dictionary<string, string[]>();
+            string[] tempTrans = new string[finalyStates.Count + 1];
+            for (int i = 0; i < finalyStates.Count; i++)
+            {
+                tempTrans[i] = finalyStates[i];
+            }
+            tempTrans[tempTrans.Length - 1] = "| ";
             for (int i = 0; i < alphabet.Count; i++)
             {
-                transitions.Add(alphabet[i], finalyStates);
+                transitions.Add(alphabet[i], tempTrans);
             }
 
             priority = index.ToString();
             stopSymbol = " ";
-            machineName = "First";
+            machineName = letter.ToUpper();
             FiniteStateMachine newAutomate = new FiniteStateMachine(states, initialStates, finalyStates, alphabet, transitions, priority, stopSymbol, machineName);
 
-            foreach (var item in newAutomate.NewTransitions)
-            {
-                Console.WriteLine(item.Key+": ");
-                foreach (var item2 in item.Value)
-                {
-                    Console.WriteLine(item2);
-                }
-            }
+            //Console.WriteLine(newAutomate.ToString());
+            //Console.WriteLine();
 
-            Console.WriteLine();
+            Console.WriteLine("TEST");
+            string test = new string(Char.Parse(letter), 5);
+            Console.WriteLine(newAutomate.MaxString(test, 0));
+            Console.WriteLine("TEST");
+            return newAutomate;
         }
     }
 }
