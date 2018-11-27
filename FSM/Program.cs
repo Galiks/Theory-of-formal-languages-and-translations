@@ -120,7 +120,7 @@ namespace FSM
         {
             MyRegex myRegex = new MyRegex();
 
-            myRegex.CreateAutomate();
+            myRegex.MainFunc();
         }
     }
 }

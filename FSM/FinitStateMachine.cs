@@ -32,6 +32,7 @@ namespace FSM
         private List<string[]> _listForTransition;
         //после любви с масивами я решил изменить массив на список
         private List<List<string>> _newListForTransition;
+        private Dictionary<string, List<string>> _newTransitions;
         //переходы
         private Dictionary<string, string[]> _transitions;
         //список для записей промежуточных состояний автомата
@@ -60,6 +61,7 @@ namespace FSM
         public string MachineName { get => machineName; set => machineName = value; }
         public static string OutputFile { get => outputFile; set => outputFile = value; }
         public List<List<string>> NewListForTransition { get => _newListForTransition; set => _newListForTransition = value; }
+        public Dictionary<string, List<string>> NewTransitions { get => _newTransitions; set => _newTransitions = value; }
 
 
         #endregion
@@ -222,7 +224,6 @@ namespace FSM
         /// <param name="initialStates">Список начальных состояний</param>
         /// <param name="finalyStates">Список конечных состояний</param>
         /// <param name="alphabet">Алфавит автомата</param>
-        /// <param name="currentState">Текущее состояние</param>
         /// <param name="transitions">Словать переходов, где key - символ, value - переход в состояние</param>
         /// <param name="listForTransition">Список состояний для перехода</param>
         /// <param name="priority">Приоритет автомата</param>
@@ -232,10 +233,7 @@ namespace FSM
             List<string> initialStates, 
             List<string> finalyStates, 
             List<string> alphabet, 
-            List<string> currentState, 
-            Dictionary<string, string[]> transitions, 
-            List<List<string>> listForTransition, 
-            HashSet<string> interimStates, 
+            Dictionary<string, List<string>> transitions,
             string priority, 
             string stopSymbol, 
             string machineName)
@@ -244,10 +242,7 @@ namespace FSM
             InitialStates = initialStates ?? throw new ArgumentNullException(nameof(initialStates));
             FinalyStates = finalyStates ?? throw new ArgumentNullException(nameof(finalyStates));
             Alphabet = alphabet ?? throw new ArgumentNullException(nameof(alphabet));
-            CurrentState = currentState ?? throw new ArgumentNullException(nameof(currentState));
-            Transitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
-            NewListForTransition = listForTransition ?? throw new ArgumentNullException(nameof(listForTransition));
-            InterimStates = interimStates ?? throw new ArgumentNullException(nameof(interimStates));
+            NewTransitions = transitions ?? throw new ArgumentNullException(nameof(transitions));
             Priority = priority ?? throw new ArgumentNullException(nameof(priority));
             StopSymbol = stopSymbol ?? throw new ArgumentNullException(nameof(stopSymbol));
             MachineName = machineName ?? throw new ArgumentNullException(nameof(machineName));
